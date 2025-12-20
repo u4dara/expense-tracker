@@ -18,6 +18,9 @@
     "mongoose": "^9.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@biomejs/biome": "2.3.10",
+    "i": "0.3.7",
+    "nodemon": "^3.1.11",
+    "npm": "11.7.0"
   }
 }
