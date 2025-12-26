@@ -2,14 +2,20 @@ import colors from 'colors';
 import express from 'express';
 
 import { PORT } from './configs/env.js';
+import errorHandler from './middlewares/errorHandlerMiddleware.js';
 import transactionRouter from './routes/transaction.routes.js';
 
 const app = express();
 
 // Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use('/api/v1/transaction', transactionRouter);
+
+// Error Handler Middleware
+app.use(errorHandler);
 
 const startServer = () => {
 	app.listen(PORT || 5500, () => {
