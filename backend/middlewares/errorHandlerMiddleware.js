@@ -1,6 +1,6 @@
 import { NODE_ENV } from '../configs/env.js';
 
-const errorHandler = async (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
 	try {
 		let error = { ...err };
 		error.message = err.message;
@@ -26,7 +26,7 @@ const errorHandler = async (err, req, res, next) => {
 			error.statusCode = 400;
 		}
 
-		res.status(res.statusCode || 500).json({
+		res.status(error.statusCode || 500).json({
 			success: false,
 			message: error.message || 'Server Error',
 		});

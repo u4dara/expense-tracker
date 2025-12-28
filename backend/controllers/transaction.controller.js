@@ -1,4 +1,5 @@
 import { transactions } from '../database/transactionSampleData.js';
+import AppError from '../utils/appError.js';
 
 //@desc    Get all transactions
 //@route   GET /api/v1/transactions
@@ -12,8 +13,7 @@ export const getTrasactions = async (req, res) => {
 //@access  Private
 export const addTransaction = async (req, res) => {
 	if (!req.body.text) {
-		res.status(400);
-		throw new Error('Please add some text');
+		throw new AppError('Please add a text field', 400);
 	}
 	res
 		.status(201)
