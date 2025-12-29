@@ -19,8 +19,9 @@ const transactionSchema = new mongoose.Schema(
 			required: [true, 'Please specify transaction type'],
 		},
 		category: {
-			type: String,
-			required: [true, 'Please add a category'],
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Category',
+			required: true,
 		},
 		date: {
 			type: Date,

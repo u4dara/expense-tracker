@@ -8,6 +8,7 @@ const transactionCategorySchema = new mongoose.Schema(
 			trim: true,
 			minlength: 3,
 			maxlength: 50,
+			unique: true,
 		},
 		type: {
 			type: String,

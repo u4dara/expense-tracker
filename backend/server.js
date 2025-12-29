@@ -4,6 +4,7 @@ import express from 'express';
 import { PORT } from './configs/env.js';
 import connectToDatabase from './database/mongodb.js';
 import errorHandler from './middlewares/errorHandlerMiddleware.js';
+import transactionCategoryRouter from './routes/transaction.category.routes.js';
 import transactionRouter from './routes/transaction.routes.js';
 
 const app = express();
@@ -13,7 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use('/api/v1/transaction', transactionRouter);
+app.use('/api/v1/transactions', transactionRouter);
+app.use('/api/v1/categories', transactionCategoryRouter);
 
 // Error Handler Middleware
 app.use(errorHandler);
