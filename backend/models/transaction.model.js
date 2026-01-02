@@ -27,6 +27,11 @@ const transactionSchema = new mongoose.Schema(
 			type: Date,
 			required: [true, 'Please add a date'],
 		},
+		user: {
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: 'User',
+		},
 	},
 	{
 		timestamps: true,

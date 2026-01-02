@@ -10,6 +10,11 @@ const transactionCategorySchema = new mongoose.Schema(
 			maxlength: 50,
 			unique: true,
 		},
+		user: {
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: 'User',
+		},
 		type: {
 			type: String,
 			enum: ['income', 'expense'],
