@@ -7,6 +7,7 @@ import errorHandler from './middlewares/error.Handler.Middleware.js';
 import authRouter from './routes/auth.routes.js';
 import transactionCategoryRouter from './routes/transaction.category.routes.js';
 import transactionRouter from './routes/transaction.routes.js';
+import userRouter from './routes/user.routes.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/categories', transactionCategoryRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 
 // Error Handler Middleware
 app.use(errorHandler);

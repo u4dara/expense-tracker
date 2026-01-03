@@ -5,13 +5,17 @@ import {
 	getAllCategories,
 	updateCategory,
 } from '../controllers/transaction.category.controller.js';
+import protect from '../middlewares/auth.middleware.js';
 
 const transactionCategoryRouter = Router();
 
-transactionCategoryRouter.route('/').get(getAllCategories).post(addCategory);
+transactionCategoryRouter
+	.route('/')
+	.get(protect, getAllCategories)
+	.post(protect, addCategory);
 transactionCategoryRouter
 	.route('/:id')
-	.put(updateCategory)
-	.delete(deleteCategory);
+	.put(protect, updateCategory)
+	.delete(protect, deleteCategory);
 
 export default transactionCategoryRouter;
