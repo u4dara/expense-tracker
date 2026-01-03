@@ -49,9 +49,9 @@ export const updateCategory = asyncHandler(async (req, res) => {
 		throw new AppError('Category not found', 404);
 	}
 
-	const user = await User.findById(req.user._id);
 	// Find whether user is logged in user
-	if (!user) {
+	const loggedInUser = req.user;
+	if (!loggedInUser) {
 		throw new AppError('User not found. Please Sign-in', 401);
 	}
 
@@ -86,8 +86,8 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 		throw new AppError('Category not found', 404);
 	}
 
-	const user = await User.findById(req.user._id);
 	// Find whether user is logged in user
+	const user = req.user;
 	if (!user) {
 		throw new AppError('User not found. Please Sign-in', 401);
 	}

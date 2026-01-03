@@ -5,13 +5,17 @@ import {
 	getTrasactions,
 	updateTransaction,
 } from '../controllers/transaction.controller.js';
+import protect from '../middlewares/auth.middleware.js';
 
 const transactionRouter = Router();
 
-transactionRouter.route('/').get(getTrasactions).post(addTransaction);
+transactionRouter
+	.route('/')
+	.get(protect, getTrasactions)
+	.post(protect, addTransaction);
 transactionRouter
 	.route('/:id')
-	.put(updateTransaction)
-	.delete(deleteTransaction);
+	.put(protect, updateTransaction)
+	.delete(protect, deleteTransaction);
 
 export default transactionRouter;
