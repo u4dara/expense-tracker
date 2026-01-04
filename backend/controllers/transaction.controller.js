@@ -47,7 +47,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
 //@desc    Update a transaction
 //@route   PUT /api/v1/transactions/:id
 //@access  Private
-export const updateTransaction = async (req, res) => {
+export const updateTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
 	if (!existingTransaction) {
 		throw new AppError('Transaction not found', 404);
@@ -94,12 +94,12 @@ export const updateTransaction = async (req, res) => {
 		message: 'Transaction updated successfully',
 		data: updatedTransaction,
 	});
-};
+});
 
 //@desc    Delete a transaction
 //@route   DELETE /api/v1/transactions/:id
 //@access  Private
-export const deleteTransaction = async (req, res) => {
+export const deleteTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
 	if (!existingTransaction) {
 		throw new AppError('Transaction not found', 404);
@@ -122,4 +122,4 @@ export const deleteTransaction = async (req, res) => {
 		message: 'Transaction deleted successfully',
 		data: deletedTransaction,
 	});
-};
+});

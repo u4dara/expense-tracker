@@ -5,6 +5,7 @@ import { PORT } from './configs/env.js';
 import connectToDatabase from './database/mongodb.js';
 import errorHandler from './middlewares/error.Handler.Middleware.js';
 import authRouter from './routes/auth.routes.js';
+import summaryRouter from './routes/summary.routes.js';
 import transactionCategoryRouter from './routes/transaction.category.routes.js';
 import transactionRouter from './routes/transaction.routes.js';
 import userRouter from './routes/user.routes.js';
@@ -20,6 +21,7 @@ app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/categories', transactionCategoryRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/summary', summaryRouter);
 
 // Error Handler Middleware
 app.use(errorHandler);

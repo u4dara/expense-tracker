@@ -56,7 +56,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
 	}
 
 	// Check if the logged in user is the owner of the category
-	if (existingCategory.user.toString() !== user._id.toString()) {
+	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
 		throw new AppError('User not authorized to update this category.', 403);
 	}
 
@@ -87,13 +87,13 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 	}
 
 	// Find whether user is logged in user
-	const user = req.user;
-	if (!user) {
+	const loggedInUser = req.user;
+	if (!loggedInUser) {
 		throw new AppError('User not found. Please Sign-in', 401);
 	}
 
 	// Check if the logged in user is the owner of the category
-	if (existingCategory.user.toString() !== user._id.toString()) {
+	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
 		throw new AppError('User not authorized to update this category', 403);
 	}
 	await Category.findByIdAndDelete(req.params.id);
