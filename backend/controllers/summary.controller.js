@@ -1,7 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import {
 	findAllTimeTransactionSummary,
-	findMonthOrYearExpenses,
+	findCategoryWiseExpenses,
+	findMonthOrYearSummary,
 } from '../services/summary.service.js';
 import AppError from '../utils/appError.js';
 
@@ -25,12 +26,12 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 //@desc    Get total expenses for a month
 //@route   GET /api/v1/expenses/month
 //@access  Private
-export const getMonthOrYearExpenses = asyncHandler(async (req, res) => {
+export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 	const { year, month } = req.body;
 
 	if (!year) throw new AppError('Year is required', 400);
 
-	const totalMonthExpenses = await findMonthOrYearExpenses(
+	const totalMonthSummary = await findMonthOrYearSummary(
 		req.user._id,
 		year,
 		month,
@@ -42,7 +43,32 @@ export const getMonthOrYearExpenses = asyncHandler(async (req, res) => {
 		data: {
 			year: year,
 			month: month || 'all',
-			totalExpenses: totalMonthExpenses,
+			totalTransactions: totalMonthSummary,
+		},
+	});
+});
+
+//@desc    Get total expenses for a month in category wise
+//@route   GET /api/v1/expenses/category-wise
+//@access  Private
+export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
+	const { year, month } = req.body;
+
+	if (!year) throw new AppError('Year is required', 400);
+
+	const categoryWiseExpenses = await findCategoryWiseExpenses(
+		req.user._id,
+		year,
+		month,
+	);
+
+	res.status(200).json({
+		success: true,
+		message: 'Category wise expenses fetched successfully',
+		data: {
+			year: year,
+			month: month || 'all',
+			categoryWiseExpenses: categoryWiseExpenses,
 		},
 	});
 });

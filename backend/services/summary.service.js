@@ -23,7 +23,7 @@ export const findAllTimeTransactionSummary = async (userID) => {
 	};
 };
 
-export const findMonthOrYearExpenses = async (userID, year, month) => {
+export const findMonthOrYearSummary = async (userID, year, month) => {
 	let startDate, endDate;
 	const numberYear = Number(year);
 
@@ -38,17 +38,76 @@ export const findMonthOrYearExpenses = async (userID, year, month) => {
 		{
 			$match: {
 				user: userID,
+				date: { $gte: startDate, $lt: endDate },
+			},
+		},
+		{
+			$group: {
+				_id: '$type',
+				total: { $sum: '$amount' },
+			},
+		},
+	]);
+
+	let totalExpenses = 0;
+	let totalIncome = 0;
+
+	result.forEach((item) => {
+		if (item._id === 'expense') totalExpenses = item.total;
+
+		if (item._id === 'income') totalIncome = item.total;
+	});
+
+	return {
+		totalExpenses,
+		totalIncome,
+	};
+};
+
+export const findCategoryWiseExpenses = async (userID, year, month) => {
+	let startDate, endDate;
+	const numberYear = Number(year);
+
+	if (month) {
+		startDate = new Date(year, month - 1, 1);
+		endDate = new Date(year, month, 1);
+	} else {
+		startDate = new Date(year, 0, 1);
+		endDate = new Date(numberYear + 1, 0, 1);
+	}
+
+	return await Transaction.aggregate([
+		{
+			$match: {
+				user: userID,
 				type: 'expense',
 				date: { $gte: startDate, $lt: endDate },
 			},
 		},
 		{
 			$group: {
-				_id: null,
-				totalExpenses: { $sum: '$amount' },
+				_id: '$category',
+				totalExpense: { $sum: '$amount' },
+			},
+		},
+		{
+			$lookup: {
+				from: 'transactioncategories',
+				localField: '_id',
+				foreignField: '_id',
+				as: 'category',
+			},
+		},
+		{
+			$unwind: '$category',
+		},
+		{
+			$project: {
+				_id: 0,
+				categoryID: '$_id',
+				categoryName: '$category.name',
+				totalExpense: 1,
 			},
 		},
 	]);
-
-	return result[0]?.totalExpenses || 0;
 };
