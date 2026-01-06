@@ -27,9 +27,12 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 //@route   GET /api/v1/expenses/month
 //@access  Private
 export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
-	const { year, month } = req.body;
+	const { year, month } = req.query;
+	const numericYear = Number(year);
 
-	if (!year) throw new AppError("Year is required", 400);
+	if (!year || Number.isNaN(numericYear)) {
+		throw new AppError("A Valid Year is required", 400);
+	}
 
 	const totalMonthSummary = await findMonthOrYearSummary(
 		req.user._id,
@@ -52,9 +55,12 @@ export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 //@route   GET /api/v1/expenses/category-wise
 //@access  Private
 export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
-	const { year, month } = req.body;
+	const { year, month } = req.query;
+  const numericYear = Number(year);
 
-	if (!year) throw new AppError("Year is required", 400);
+	if (!year || Number.isNaN(numericYear)) {
+		throw new AppError("Year is required", 400);
+	}
 
 	const categoryWiseExpenses = await findCategoryWiseExpenses(
 		req.user._id,

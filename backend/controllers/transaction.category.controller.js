@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Category from '../models/transaction.category.model.js';
-import User from '../models/user.model.js';
 import AppError from '../utils/appError.js';
 
 //@desc    Get all categories
