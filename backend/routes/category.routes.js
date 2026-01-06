@@ -1,20 +1,20 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
 	addCategory,
 	deleteCategory,
 	getAllCategories,
 	updateCategory,
-} from '../controllers/category.controller.js';
-import protect from '../middlewares/auth.middleware.js';
+} from "../controllers/category.controller.js";
+import protect from "../middlewares/auth.middleware.js";
 
 const transactionCategoryRouter = Router();
 
 transactionCategoryRouter
-	.route('/')
+	.route("/")
 	.get(protect, getAllCategories)
 	.post(protect, addCategory);
 transactionCategoryRouter
-	.route('/:id')
+	.route("/:id")
 	.put(protect, updateCategory)
 	.delete(protect, deleteCategory);
 

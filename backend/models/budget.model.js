@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const transactionCategoryBudgetSchema = new mongoose.Schema(
+const BudgetSchema = new mongoose.Schema(
 	{
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +28,4 @@ const transactionCategoryBudgetSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-export default mongoose.model(
-	"CategoryBudget",
-	transactionCategoryBudgetSchema,
-);
+export default mongoose.model("Budget", BudgetSchema);

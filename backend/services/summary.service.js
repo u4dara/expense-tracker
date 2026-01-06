@@ -89,7 +89,7 @@ export const findCategoryWiseExpenses = async (userID, year, month) => {
 		},
 		{
 			$lookup: {
-				from: "transactioncategories",
+				from: "categories",
 				localField: "_id",
 				foreignField: "_id",
 				as: "category",

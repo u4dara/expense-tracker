@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const transactionCategorySchema = new mongoose.Schema(
+const CategorySchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -30,4 +30,4 @@ const transactionCategorySchema = new mongoose.Schema(
 	},
 );
 
-export default mongoose.model("TransactionCategory", transactionCategorySchema);
+export default mongoose.model("Category", CategorySchema);
