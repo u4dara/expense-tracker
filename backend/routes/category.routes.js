@@ -4,7 +4,7 @@ import {
 	deleteCategory,
 	getAllCategories,
 	updateCategory,
-} from '../controllers/transaction.category.controller.js';
+} from '../controllers/category.controller.js';
 import protect from '../middlewares/auth.middleware.js';
 
 const transactionCategoryRouter = Router();

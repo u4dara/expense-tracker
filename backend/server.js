@@ -6,7 +6,7 @@ import connectToDatabase from './database/mongodb.js';
 import errorHandler from './middlewares/error.Handler.Middleware.js';
 import authRouter from './routes/auth.routes.js';
 import summaryRouter from './routes/summary.routes.js';
-import transactionCategoryRouter from './routes/transaction.category.routes.js';
+import transactionCategoryRouter from './routes/category.routes.js';
 import transactionRouter from './routes/transaction.routes.js';
 import trendRouter from './routes/trend.routes.js';
 import userRouter from './routes/user.routes.js';

@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import Category from "../models/transaction.category.model.js";
+import Category from "../models/category.model.js";
 import Transaction from "../models/transaction.model.js";
 import AppError from "../utils/appError.js";
 

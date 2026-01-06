@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const transactionCategorySchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
-			required: [true, 'Please add a category name'],
+			required: [true, "Please add a category name"],
 			trim: true,
 			minlength: 3,
 			maxlength: 50,
@@ -13,16 +13,16 @@ const transactionCategorySchema = new mongoose.Schema(
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref: 'User',
+			ref: "User",
 		},
 		type: {
 			type: String,
-			enum: ['income', 'expense'],
-			required: [true, 'Please add a category type'],
+			enum: ["income", "expense"],
+			required: [true, "Please add a category type"],
 		},
 		color: {
 			type: String,
-			default: '#aac0e3',
+			default: "#aac0e3",
 		},
 	},
 	{
@@ -30,4 +30,4 @@ const transactionCategorySchema = new mongoose.Schema(
 	},
 );
 
-export default mongoose.model('TransactionCategory', transactionCategorySchema);
+export default mongoose.model("TransactionCategory", transactionCategorySchema);
