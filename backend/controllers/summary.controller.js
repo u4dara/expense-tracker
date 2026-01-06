@@ -1,10 +1,10 @@
-import asyncHandler from 'express-async-handler';
+import asyncHandler from "express-async-handler";
 import {
 	findAllTimeTransactionSummary,
 	findCategoryWiseExpenses,
 	findMonthOrYearSummary,
-} from '../services/summary.service.js';
-import AppError from '../utils/appError.js';
+} from "../services/summary.service.js";
+import AppError from "../utils/appError.js";
 
 //@desc    Get total income, expenses and balance for all time
 //@route   GET /api/v1/expenses/all
@@ -13,12 +13,12 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 	const summary = await findAllTimeTransactionSummary(req.user._id);
 
 	if (!summary) {
-		throw new AppError('Could not fetch summary', 500);
+		throw new AppError("Could not fetch summary", 500);
 	}
 
 	res.status(200).json({
 		success: true,
-		message: 'Summary fetched successfully',
+		message: "Summary fetched successfully",
 		data: summary,
 	});
 });
@@ -29,7 +29,7 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 	const { year, month } = req.body;
 
-	if (!year) throw new AppError('Year is required', 400);
+	if (!year) throw new AppError("Year is required", 400);
 
 	const totalMonthSummary = await findMonthOrYearSummary(
 		req.user._id,
@@ -39,10 +39,10 @@ export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		success: true,
-		message: 'Expenses fetched successfully',
+		message: "Expenses fetched successfully",
 		data: {
 			year: year,
-			month: month || 'all',
+			month: month || "all",
 			totalTransactions: totalMonthSummary,
 		},
 	});
@@ -54,7 +54,7 @@ export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
 	const { year, month } = req.body;
 
-	if (!year) throw new AppError('Year is required', 400);
+	if (!year) throw new AppError("Year is required", 400);
 
 	const categoryWiseExpenses = await findCategoryWiseExpenses(
 		req.user._id,
@@ -64,10 +64,10 @@ export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		success: true,
-		message: 'Category wise expenses fetched successfully',
+		message: "Category wise expenses fetched successfully",
 		data: {
 			year: year,
-			month: month || 'all',
+			month: month || "all",
 			categoryWiseExpenses: categoryWiseExpenses,
 		},
 	});
