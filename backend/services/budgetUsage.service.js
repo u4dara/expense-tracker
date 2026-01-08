@@ -1,5 +1,4 @@
 import Budget from "../models/budget.model.js";
-import Category from "../models/category.model.js";
 import Transaction from "../models/transaction.model.js";
 
 export const findBudgetVsExpenseUsage = async (userID, year, month) => {
