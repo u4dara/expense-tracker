@@ -16,7 +16,7 @@ export const signUp = asyncHandler(async (req, res) => {
 		throw new AppError('Please provide name, email and password', 400);
 	}
 
-	// Validate email fromat
+	// Validate email format
 	if (!isEmail(email)) {
 		throw new AppError('Please provide a valid email', 400);
 	}
@@ -68,7 +68,7 @@ export const signIn = asyncHandler(async (req, res) => {
 		throw new AppError('Please provide email and password', 400);
 	}
 
-	// Validate email fromat
+	// Validate email format
 	if (!isEmail(email)) {
 		throw new AppError('Please provide a valid email', 400);
 	}

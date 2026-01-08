@@ -18,9 +18,12 @@ export const getTransactions = asyncHandler(async (req, res) => {
 //@access  Private
 export const addTransaction = asyncHandler(async (req, res) => {
 	const { title, amount, category, date } = req.body;
-	if (!title || !amount || !category || !date) {
+	if (!title || !amount || !category) {
 		throw new AppError("Please add all fields", 400);
 	}
+
+	const currentDate = new Date();
+
 	const selectedCategory = await Category.findOne({
 		name: category,
 		user: req.user._id,
@@ -33,7 +36,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
 		amount,
 		type: selectedCategory.type,
 		category: selectedCategory._id,
-		date,
+		date: date || currentDate,
 		user: req.user._id,
 	});
 	res.status(201).json({

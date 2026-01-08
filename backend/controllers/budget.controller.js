@@ -155,13 +155,13 @@ export const deleteBudget = asyncHandler(async (req, res) => {
 		throw new AppError("Budget not found", 404);
 	}
 
-	// Find whether user is logged in
+	// Find whether the user is logged in
 	const loggedUser = req.user;
 	if (!loggedUser) {
 		throw new AppError("User not found. Please Sign-in", 401);
 	}
 
-	// Find whether the logged in user is the owner of the budget
+	// Find whether the logged-in user is the owner of the budget
 	if (loggedUser._id.toString() !== existingBudget.user.toString()) {
 		throw new AppError("User not authorized to update this category", 403);
 	}
