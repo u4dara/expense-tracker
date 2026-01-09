@@ -17,7 +17,9 @@ export const getBudgets = asyncHandler(async (req, res) => {
 		throw new AppError("A Valid Year is required", 400);
 	}
 
-	const budgets = await findBudgets(req.user._id, numericYear, numericMonth);
+	const budgets = (
+		await findBudgets(req.user._id, numericYear, numericMonth)
+	).sort({ createdAt: -1 });
 
 	res.status(200).json({
 		success: true,
@@ -73,8 +75,21 @@ export const addBudget = asyncHandler(async (req, res) => {
 		category: existingCategory._id,
 		amount: numericAmount,
 		year: numericYear,
-		month,
+		month: month || null,
 	});
+
+	// Send data to logger middleware
+	req.audit = {
+		action: "create",
+		entity: "Budget",
+		entityID: newBudget._id,
+		after: {
+			category: newBudget.category,
+			amount: newBudget.amount,
+			year: newBudget.year,
+			month: newBudget.month,
+		},
+	};
 
 	res.status(201).json({
 		success: true,
@@ -139,6 +154,25 @@ export const updateBudget = asyncHandler(async (req, res) => {
 		{ new: true },
 	);
 
+	// Send data to logger middleware
+	req.audit = {
+		action: "update",
+		entity: "Budget",
+		entityID: existingBudget._id,
+		before: {
+			category: existingBudget.category,
+			amount: existingBudget.amount,
+			year: existingBudget.year,
+			month: existingBudget.month,
+		},
+		after: {
+			category: updatedBudget.category,
+			amount: updatedBudget.amount,
+			year: updatedBudget.year,
+			month: updatedBudget.month,
+		},
+	};
+
 	res.status(200).json({
 		success: true,
 		message: "Budget updated successfully",
@@ -167,6 +201,19 @@ export const deleteBudget = asyncHandler(async (req, res) => {
 	}
 
 	const deletedBudget = await Budget.findByIdAndDelete(req.params.id);
+
+	// Send data to logger middleware
+	req.audit = {
+		action: "delete",
+		entity: "Budget",
+		entityID: existingBudget._id,
+		before: {
+			category: existingBudget.category,
+			amount: existingBudget.amount,
+			year: existingBudget.year,
+			month: existingBudget.month,
+		},
+	};
 
 	res.status(200).json({
 		success: true,
