@@ -5,6 +5,7 @@ import { PORT } from "./configs/env.js";
 import limiter from "./configs/rateLimit.js";
 import connectToDatabase from "./database/mongodb.js";
 import errorHandler from "./middlewares/error.middleware.js";
+import logger from "./middlewares/log.middleware.js";
 import authRouter from "./routes/auth.routes.js";
 import budgetRouter from "./routes/budget.routes.js";
 import transactionCategoryRouter from "./routes/category.routes.js";
@@ -18,7 +19,8 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(limiter);
+app.use(limiter); // Rate Limiting Middleware
+app.use(logger); // Logger Middleware
 
 // Routes
 app.use("/api/v1/transactions", transactionRouter);

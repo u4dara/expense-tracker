@@ -1,7 +1,5 @@
 import bcrypt from 'bcrypt';
 import asyncHandler from 'express-async-handler';
-import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
 import isEmail from 'validator/lib/isEmail.js';
 import User from '../models/user.model.js';
 import AppError from '../utils/appError.js';

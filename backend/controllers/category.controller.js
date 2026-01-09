@@ -30,8 +30,21 @@ export const addCategory = asyncHandler(async (req, res) => {
 		name,
 		user: req.user._id,
 		type,
-		color,
+		color: color || "#aac0e3",
 	});
+
+  // Send data to logger middleware
+	req.audit = {
+		action: "create",
+		entity: "Category",
+		entityID: newCategory._id,
+		after: {
+			name: newCategory.name,
+			type: newCategory.type,
+			color: newCategory.color,
+		},
+	};
+
 	res.status(201).json({
 		success: true,
 		message: "Category added successfully",
@@ -47,6 +60,9 @@ export const updateCategory = asyncHandler(async (req, res) => {
 	if (!existingCategory) {
 		throw new AppError("Category not found", 404);
 	}
+
+  // Convert mongoose object into a plain js object
+  const before = existingCategory.toObject();
 
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
@@ -69,6 +85,24 @@ export const updateCategory = asyncHandler(async (req, res) => {
 		},
 		{ new: true },
 	);
+
+  // Send data to logger middleware
+	req.audit = {
+		action: "update",
+		entity: "Category",
+		entityID: existingCategory._id,
+    before: {
+      name: before.name,
+			type: before.type,
+			color: before.color,
+    },
+		after: {
+			name: updatedCategory.name,
+			type: updatedCategory.type,
+			color: updatedCategory.color,
+		},
+	};
+
 	res.status(200).json({
 		success: true,
 		message: "Category updated successfully",
@@ -96,6 +130,19 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 		throw new AppError("User not authorized to update this category", 403);
 	}
 	await Category.findByIdAndDelete(req.params.id);
+
+    // Send data to logger middleware
+	req.audit = {
+		action: "delete",
+		entity: "Category",
+		entityID: existingCategory._id,
+    before: {
+      name: existingCategory.name,
+			type: existingCategory.type,
+			color: existingCategory.color,
+    },
+	};
+
 	res.status(200).json({
 		success: true,
 		message: "Category deleted successfully",
