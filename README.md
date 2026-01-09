@@ -113,7 +113,7 @@ http://localhost:5500
 * ` GET /api/v1/summary?year=2025&month=3 `
 
 ## 🛠 Future Improvements
-### Core Usability Improvements
+### - Core Usability Improvements -
 #### Smart defaults
 * Remember the last date
 * Default currency
@@ -121,7 +121,7 @@ http://localhost:5500
 #### Editable Transactions
 * Undo delete
 
-### Personalisation and Control
+### - Personalisation and Control -
 #### Recurring Transactions 
 * Generate expense record every month on the 1st
 #### Custom categories and colours
@@ -132,12 +132,12 @@ http://localhost:5500
 * Last 7 days
 * Last 30 days
 
-### Performance and Reliability 
+### - Performance and Reliability -
 #### Pagination and infinite scroll
 #### Soft Deletes
 * Allow recovery
 
-### Security and Account Features
+### - Security and Account Features -
 #### Password Reset Flow
 * Forgot Password
 * Email token
@@ -146,11 +146,11 @@ http://localhost:5500
 * Short-lived access token
 * Long-lived refresh token
 
-### Data Export and Portability
+### - Data Export and Portability -
 #### Export to CSV / Excel
 * Monthly Reports
 * Category Summary
 
-### Optional Features
+### - Optional Features -
 #### Expense Insights
 * Simple AI logics
