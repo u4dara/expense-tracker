@@ -61,9 +61,6 @@ export const updateCategory = asyncHandler(async (req, res) => {
 		throw new AppError("Category not found", 404);
 	}
 
-  // Convert mongoose object into a plain js object
-  const before = existingCategory.toObject();
-
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
 	if (!loggedInUser) {
@@ -92,9 +89,9 @@ export const updateCategory = asyncHandler(async (req, res) => {
 		entity: "Category",
 		entityID: existingCategory._id,
     before: {
-      name: before.name,
-			type: before.type,
-			color: before.color,
+      name: existingCategory.name,
+			type: existingCategory.type,
+			color: existingCategory.color,
     },
 		after: {
 			name: updatedCategory.name,
