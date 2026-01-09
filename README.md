@@ -68,10 +68,18 @@ src/
 
 ## 🔑 Environment Variables
 ```
-PORT=5500
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_key
-JWT_EXPIRES_IN=7d
+# ENVIRONMENT
+NODE_ENV = development
+
+# PORT
+PORT = 5500
+
+# MONGODB
+MONGODB_URI = your_mongodb_connection_string
+
+# JWT AUTHENTICATION
+JWT_SECRET = your_super_secret_key
+JWT_EXPIRES_IN = 7d
 ```
 
 ### ▶️ Running the Project
