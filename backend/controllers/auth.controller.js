@@ -11,7 +11,7 @@ import generateToken from '../utils/generateToken.js';
 export const signUp = asyncHandler(async (req, res) => {
 	const { name, email, password } = req.body;
 	if (!name || !email || !password) {
-		throw new AppError('Please provide name, email and password', 400);
+		throw new AppError('Please provide name, email and password!', 400);
 	}
 
 	// Validate email format
@@ -27,7 +27,7 @@ export const signUp = asyncHandler(async (req, res) => {
 	// Check if user already exists
 	const isUserExists = await User.findOne({ email });
 	if (isUserExists) {
-		throw new AppError('User already exists with this email', 400);
+		throw new AppError('Registered User already exists with this email', 400);
 	}
 
 	// Hash password
@@ -53,7 +53,7 @@ export const signUp = asyncHandler(async (req, res) => {
 			},
 		});
 	} else {
-		throw new AppError('Failed to create user', 500);
+		throw new AppError('Failed to create user!!', 500);
 	}
 });
 
@@ -73,7 +73,7 @@ export const signIn = asyncHandler(async (req, res) => {
 
 	const user = await User.findOne({ email });
 	if (!user || !(await bcrypt.compare(password, user.password))) {
-		throw new AppError('Invalid email or password', 401);
+		throw new AppError('Invalid email or password. Please check again!', 401);
 	}
 
 	res.status(200).json({

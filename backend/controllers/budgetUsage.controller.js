@@ -9,7 +9,7 @@ export const getBudgetVsExpenseUsage = asyncHandler(async (req, res) => {
 	const numericMonth = month ? Number(month) : null;
 
 	if (!year || Number.isNaN(numericYear)) {
-		throw new AppError("A Valid Year is required", 400);
+		throw new AppError("Provided Year is incorrect. Please provide a valid year!", 400);
 	}
 
 	const budgetVsExpenseUsage = await findBudgetVsExpenseUsage(

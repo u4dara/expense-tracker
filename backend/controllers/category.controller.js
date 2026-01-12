@@ -18,12 +18,12 @@ export const getAllCategories = asyncHandler(async (req, res) => {
 export const addCategory = asyncHandler(async (req, res) => {
 	const { name, type, color } = req.body;
 	if (!name || !type) {
-		throw new AppError("Please add all fields", 400);
+		throw new AppError("Please provide all the details", 400);
 	}
 
 	const existingCategory = await Category.findOne({ name });
 	if (existingCategory) {
-		throw new AppError("Category already exists", 400);
+		throw new AppError("Previously created Category is already existing for this category and period", 400);
 	}
 
 	const newCategory = await Category.create({
@@ -58,18 +58,18 @@ export const addCategory = asyncHandler(async (req, res) => {
 export const updateCategory = asyncHandler(async (req, res) => {
 	const existingCategory = await Category.findById(req.params.id);
 	if (!existingCategory) {
-		throw new AppError("Category not found", 404);
+		throw new AppError("Selected Category was not found. Please select another one!", 404);
 	}
 
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
 	if (!loggedInUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Check if the logged in user is the owner of the category
 	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
-		throw new AppError("User not authorized to update this category.", 403);
+		throw new AppError("User is not authorized to update this Category.", 403);
 	}
 
 	const { name, type, color } = req.body;
@@ -113,18 +113,18 @@ export const updateCategory = asyncHandler(async (req, res) => {
 export const deleteCategory = asyncHandler(async (req, res) => {
 	const existingCategory = await Category.findById(req.params.id);
 	if (!existingCategory) {
-		throw new AppError("Category not found", 404);
+		throw new AppError("Selected Category was not found. Please select another one!", 404);
 	}
 
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
 	if (!loggedInUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Check if the logged in user is the owner of the category
 	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
-		throw new AppError("User not authorized to update this category", 403);
+		throw new AppError("User is not authorized to update this Category", 403);
 	}
 	await Category.findByIdAndDelete(req.params.id);
 

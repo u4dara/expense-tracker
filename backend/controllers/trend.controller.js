@@ -25,7 +25,7 @@ export const getMonthlyExpenseTrends = asyncHandler(async (req, res) => {
 	const numericYear = Number(year);
 
 	if (!year || Number.isNaN(numericYear)) {
-		throw new AppError("A valid Year is required", 400);
+		throw new AppError("Please provide a valid Year!", 400);
 	}
 
 	const expenseTrends = await findMonthlyExpenseTrends(

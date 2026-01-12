@@ -13,7 +13,7 @@ const protect = asyncHandler(async (req, res, next) => {
 	}
 
 	if (!token) {
-		throw new AppError('Not authorized, no token provided', 401);
+		throw new AppError('Not authorized, No token provided!!', 401);
 	}
 
 	try {
@@ -23,13 +23,13 @@ const protect = asyncHandler(async (req, res, next) => {
 		// Get user from the token
 		const user = await User.findById(decoded.userId).select('-password');
 		if (!user) {
-			throw new AppError('Unauthorized request', 401);
+			throw new AppError('Unauthorized request!!', 401);
 		}
 
 		req.user = user;
 		next();
 	} catch (error) {
-		throw new AppError('Not authorized, token failed', 401);
+		throw new AppError('Not authorized, Token failed!!', 401);
 	}
 });
 

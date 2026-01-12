@@ -13,7 +13,7 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 	const summary = await findAllTimeTransactionSummary(req.user._id);
 
 	if (!summary) {
-		throw new AppError("Could not fetch summary", 500);
+		throw new AppError("Could not fetch summary. Please try again!", 500);
 	}
 
 	res.status(200).json({
@@ -31,7 +31,7 @@ export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 	const numericYear = Number(year);
 
 	if (!year || Number.isNaN(numericYear)) {
-		throw new AppError("A Valid Year is required", 400);
+		throw new AppError("Please provide a valid Year!", 400);
 	}
 
 	const totalMonthSummary = await findMonthOrYearSummary(
@@ -59,7 +59,7 @@ export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
   const numericYear = Number(year);
 
 	if (!year || Number.isNaN(numericYear)) {
-		throw new AppError("Year is required", 400);
+		throw new AppError("Please provide a valid Year!", 400);
 	}
 
 	const categoryWiseExpenses = await findCategoryWiseExpenses(

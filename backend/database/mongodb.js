@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { MONGODB_URI, NODE_ENV } from '../configs/env.js';
 
 if (!MONGODB_URI) {
-	throw new Error('MongoDB URI is missing');
+	throw new Error('MongoDB URI is missing!!');
 }
 
 const connectToDatabase = async () => {

@@ -23,7 +23,7 @@ export const getBudgets = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		success: true,
-		message: "Category Budgets fetched successfully",
+		message: "Budgets fetched successfully",
 		data: {
 			year: numericYear,
 			month: month || "For year",
@@ -41,11 +41,16 @@ export const addBudget = asyncHandler(async (req, res) => {
 		throw new AppError("Please fill all the fields", 400);
 	}
 
-	const numericYear = Number(year);
 	const numericAmount = Number(amount);
+	const numericYear = Number(year);
 	if (Number.isNaN(numericYear) || Number.isNaN(numericAmount)) {
-		throw new AppError("Please add valid details", 400);
+		throw new AppError("Year or Amount incorrect. Please provide valid details", 400);
 	}
+
+  if (month) {
+    if (Number.isNaN(Number(month)))
+      throw new AppError("Please provide a valid month number!", 400)
+  }
 
 	const existingCategory = await Category.findOne({
 		user: req.user._id,
@@ -53,7 +58,7 @@ export const addBudget = asyncHandler(async (req, res) => {
 	});
 
 	if (!existingCategory) {
-		throw new AppError("Category does not exist", 400);
+		throw new AppError("Selected Category was not found. Please select another one!", 404);
 	}
 
 	const existingBudget = await Budget.findOne({
@@ -65,7 +70,7 @@ export const addBudget = asyncHandler(async (req, res) => {
 
 	if (existingBudget) {
 		throw new AppError(
-			"Budget is already existing for this category and period",
+			"Previously created Budget is already existing for this category and period",
 			400,
 		);
 	}
@@ -104,18 +109,18 @@ export const addBudget = asyncHandler(async (req, res) => {
 export const updateBudget = asyncHandler(async (req, res) => {
 	const existingBudget = await Budget.findById(req.params.id);
 	if (!existingBudget) {
-		throw new AppError("Budget not found", 404);
+		throw new AppError("Selected Budget was not found. Please select another one!", 404);
 	}
 
 	// Find whether user is logged in
 	const loggedUser = req.user;
 	if (!loggedUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Find whether the logged in user is the owner of the budget
 	if (loggedUser._id.toString() !== existingBudget.user.toString()) {
-		throw new AppError("User not authorized to update this category", 403);
+		throw new AppError("User not authorized to update this Budget", 403);
 	}
 
 	const { category, amount, year, month } = req.body;
@@ -139,7 +144,7 @@ export const updateBudget = asyncHandler(async (req, res) => {
 		});
 
 		if (!existingCategory) {
-			throw new AppError("Existing category not found", 404);
+			throw new AppError("Selected Category was not found. Please select another one!", 404);
 		}
 	}
 
@@ -186,18 +191,18 @@ export const updateBudget = asyncHandler(async (req, res) => {
 export const deleteBudget = asyncHandler(async (req, res) => {
 	const existingBudget = await Budget.findById(req.params.id);
 	if (!existingBudget) {
-		throw new AppError("Budget not found", 404);
+		throw new AppError("Selected Budget was not found. Please select another one!", 404);
 	}
 
 	// Find whether the user is logged in
 	const loggedUser = req.user;
 	if (!loggedUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Find whether the logged-in user is the owner of the budget
 	if (loggedUser._id.toString() !== existingBudget.user.toString()) {
-		throw new AppError("User not authorized to update this category", 403);
+		throw new AppError("User is not authorized to delete this Budget", 403);
 	}
 
 	const deletedBudget = await Budget.findByIdAndDelete(req.params.id);
@@ -221,7 +226,3 @@ export const deleteBudget = asyncHandler(async (req, res) => {
 		data: deletedBudget,
 	});
 });
-
-//@desc    Delete a budget
-//@route   DELETE /api/v1/budget/:id
-//@access  Private

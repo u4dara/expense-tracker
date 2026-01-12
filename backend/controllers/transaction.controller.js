@@ -19,7 +19,7 @@ export const getTransactions = asyncHandler(async (req, res) => {
 export const addTransaction = asyncHandler(async (req, res) => {
 	const { title, amount, category, date } = req.body;
 	if (!title || !amount || !category) {
-		throw new AppError("Please add all fields", 400);
+		throw new AppError("Please provide all the details", 400);
 	}
 
 	const currentDate = new Date();
@@ -29,7 +29,7 @@ export const addTransaction = asyncHandler(async (req, res) => {
 		user: req.user._id,
 	});
 	if (!selectedCategory) {
-		throw new AppError("Category does not exist", 404);
+		throw new AppError("Selected Category was not found. Please select another one!", 404);
 	}
 	const newTransaction = await Transaction.create({
 		title,
@@ -67,13 +67,13 @@ export const addTransaction = asyncHandler(async (req, res) => {
 export const updateTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
 	if (!existingTransaction) {
-		throw new AppError("Transaction not found", 404);
+		throw new AppError("Selected Transaction was not found. Please select another one!", 404);
 	}
 
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
 	if (!loggedInUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Check if the logged in user is the owner of the transaction
@@ -141,18 +141,18 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 export const deleteTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
 	if (!existingTransaction) {
-		throw new AppError("Transaction not found", 404);
+		throw new AppError("Selected Transaction was not found. Please select another one!", 404);
 	}
 
 	// Find whether user is logged in user
 	const loggedInUser = req.user;
 	if (!loggedInUser) {
-		throw new AppError("User not found. Please Sign-in", 401);
+		throw new AppError("Logged in User was not found. Please Sign-in", 401);
 	}
 
 	// Check if the logged in user is the owner of the transaction
 	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
-		throw new AppError("User not authorized to update this transaction", 403);
+		throw new AppError("User is not authorized to update this Transaction", 403);
 	}
 
 	const deletedTransaction = await Transaction.findByIdAndDelete(req.params.id);
