@@ -17,7 +17,7 @@ A full‑featured Expense Tracker REST API built with Node.js, Express, MongoDB,
 ### 🗂 Categories
 * User‑defined transaction categories
 * Category type support (income/expense)
-* Colour-coded categories for UI usage
+* Color-coded categories for UI usage
 
 ### 📊 Expense Analytics
 * Monthly expense trends
@@ -105,10 +105,10 @@ http://localhost:5500
 * `DELETE /api/v1/categories/:id`
 
 ### Transactions
-* ` GET /api/v1/transactionzs `
-* ` POST /api/v1/transactionzs `
-* ` PUT /api/v1/transactionzs/:id `
-* ` DELETE /api/v1/transactionzs/:id `
+* ` GET /api/v1/transactions `
+* ` POST /api/v1/transactions `
+* ` PUT /api/v1/transactions/:id `
+* ` DELETE /api/v1/transactions/:id `
 
 ### Budgets
 * ` GET /api/v1/budgets?year=2026&month=3 `
@@ -125,14 +125,13 @@ http://localhost:5500
 #### Smart defaults
 * Remember the last date
 * Default currency
-#### Better Error Message
 #### Editable Transactions
 * Undo delete
 
-### - Personalisation and Control -
-#### Recurring Transactions 
+### - Personalization and Control -
+#### Recurring Transactions
 * Generate expense record every month on the 1st
-#### Custom categories and colours
+#### Custom categories and colors
 * Reorder categories
 * Archive unused ones
 #### Date range filters

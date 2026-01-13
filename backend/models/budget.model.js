@@ -24,6 +24,10 @@ const BudgetSchema = new mongoose.Schema(
 			type: Number,
 			default: null,
 		},
+    deletedAt: {
+      type: Date,
+      default: null,
+    }
 	},
 	{ timestamps: true },
 );

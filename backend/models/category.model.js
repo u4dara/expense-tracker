@@ -24,6 +24,10 @@ const CategorySchema = new mongoose.Schema(
 			type: String,
 			default: "#aac0e3",
 		},
+    isArchived: {
+      type: Boolean,
+      default: false,
+    }
 	},
 	{
 		timestamps: true,
