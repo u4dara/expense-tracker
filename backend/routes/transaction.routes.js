@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
 	addTransaction,
-	deleteTransaction,
 	getTransactions,
+	softDeleteTransaction,
 	updateTransaction,
 } from "../controllers/transaction.controller.js";
 import protect from "../middlewares/auth.middleware.js";
@@ -16,6 +16,6 @@ transactionRouter
 transactionRouter
 	.route("/:id")
 	.put(protect, updateTransaction)
-	.delete(protect, deleteTransaction);
+	.delete(protect, softDeleteTransaction);
 
 export default transactionRouter;

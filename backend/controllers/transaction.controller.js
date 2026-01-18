@@ -7,7 +7,10 @@ import AppError from "../utils/appError.js";
 //@route   GET /api/v1/transactions
 //@access  Private
 export const getTransactions = asyncHandler(async (req, res) => {
-	const allTransactions = await Transaction.find({ user: req.user._id }).sort({
+	const allTransactions = await Transaction.find({
+		user: req.user._id,
+		deletedAt: null,
+	}).sort({
 		createdAt: -1,
 	});
 	res.status(200).json({ success: true, data: allTransactions });
@@ -29,7 +32,10 @@ export const addTransaction = asyncHandler(async (req, res) => {
 		user: req.user._id,
 	});
 	if (!selectedCategory) {
-		throw new AppError("Selected Category was not found. Please select another one!", 404);
+		throw new AppError(
+			"Selected Category was not found. Please select another one!",
+			404,
+		);
 	}
 	const newTransaction = await Transaction.create({
 		title,
@@ -66,14 +72,11 @@ export const addTransaction = asyncHandler(async (req, res) => {
 //@access  Private
 export const updateTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
-	if (!existingTransaction) {
-		throw new AppError("Selected Transaction was not found. Please select another one!", 404);
-	}
-
-	// Find whether user is logged in user
-	const loggedInUser = req.user;
-	if (!loggedInUser) {
-		throw new AppError("Logged in User was not found. Please Sign-in", 401);
+	if (existingTransaction?.deletedAt !== null) {
+		throw new AppError(
+			"Selected Transaction was not found. Please select another one!",
+			404,
+		);
 	}
 
 	// Check if the logged in user is the owner of the transaction
@@ -113,12 +116,12 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 		entity: "Transaction",
 		entityID: existingTransaction._id,
 		before: {
-      title: existingTransaction.title,
+			title: existingTransaction.title,
 			amount: existingTransaction.amount,
 			type: existingTransaction.type,
 			category: existingTransaction.category,
 			date: existingTransaction.date,
-    },
+		},
 		after: {
 			title: updatedTransaction.title,
 			amount: updatedTransaction.amount,
@@ -135,27 +138,33 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 	});
 });
 
-//@desc    Delete a transaction
+//@desc    Soft Delete a transaction
 //@route   DELETE /api/v1/transactions/:id
 //@access  Private
-export const deleteTransaction = asyncHandler(async (req, res) => {
+export const softDeleteTransaction = asyncHandler(async (req, res) => {
 	const existingTransaction = await Transaction.findById(req.params.id);
-	if (!existingTransaction) {
-		throw new AppError("Selected Transaction was not found. Please select another one!", 404);
-	}
-
-	// Find whether user is logged in user
-	const loggedInUser = req.user;
-	if (!loggedInUser) {
-		throw new AppError("Logged in User was not found. Please Sign-in", 401);
+	if (existingTransaction?.deletedAt !== null) {
+		throw new AppError(
+			"Selected Transaction was not found. Please select another one!",
+			404,
+		);
 	}
 
 	// Check if the logged in user is the owner of the transaction
 	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
-		throw new AppError("User is not authorized to update this Transaction", 403);
+		throw new AppError(
+			"User is not authorized to update this Transaction",
+			403,
+		);
 	}
 
-	const deletedTransaction = await Transaction.findByIdAndDelete(req.params.id);
+	const currentDate = new Date();
+
+	const deletedTransaction = await Transaction.findByIdAndUpdate(
+		req.params.id,
+		{ $set: { deletedAt: currentDate } },
+		{ new: true },
+	);
 
 	// Send data to logger middleware
 	req.audit = {
@@ -163,12 +172,21 @@ export const deleteTransaction = asyncHandler(async (req, res) => {
 		entity: "Transaction",
 		entityID: existingTransaction._id,
 		before: {
-      title: existingTransaction.title,
+			title: existingTransaction.title,
 			amount: existingTransaction.amount,
 			type: existingTransaction.type,
 			category: existingTransaction.category,
 			date: existingTransaction.date,
-    },
+			deletedAt: existingTransaction.deletedAt,
+		},
+		after: {
+			title: deletedTransaction.title,
+			amount: deletedTransaction.amount,
+			type: deletedTransaction.type,
+			category: deletedTransaction.category,
+			date: deletedTransaction.date,
+			deletedAt: deletedTransaction.deletedAt,
+		},
 	};
 
 	res.status(200).json({
@@ -177,3 +195,46 @@ export const deleteTransaction = asyncHandler(async (req, res) => {
 		data: deletedTransaction,
 	});
 });
+
+//@desc    Permanently Delete a transaction
+//@route   DELETE /api/v1/transactions/:id
+//@access  Private
+// export const deleteTransaction = asyncHandler(async (req, res) => {
+// 	const existingTransaction = await Transaction.findById(req.params.id);
+// 	if (!existingTransaction) {
+// 		throw new AppError(
+// 			"Selected Transaction was not found. Please select another one!",
+// 			404,
+// 		);
+// 	}
+
+// 	// Check if the logged in user is the owner of the transaction
+// 	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
+// 		throw new AppError(
+// 			"User is not authorized to update this Transaction",
+// 			403,
+// 		);
+// 	}
+
+// 	const deletedTransaction = await Transaction.findByIdAndDelete(req.params.id);
+
+// 	// Send data to logger middleware
+// 	req.audit = {
+// 		action: "delete",
+// 		entity: "Transaction",
+// 		entityID: existingTransaction._id,
+// 		before: {
+// 			title: existingTransaction.title,
+// 			amount: existingTransaction.amount,
+// 			type: existingTransaction.type,
+// 			category: existingTransaction.category,
+// 			date: existingTransaction.date,
+// 		},
+// 	};
+
+// 	res.status(200).json({
+// 		success: true,
+// 		message: "Transaction deleted successfully",
+// 		data: deletedTransaction,
+// 	});
+// });
