@@ -168,7 +168,7 @@ export const softDeleteTransaction = asyncHandler(async (req, res) => {
 
 	// Send data to logger middleware
 	req.audit = {
-		action: "delete",
+		action: "soft-delete",
 		entity: "Transaction",
 		entityID: existingTransaction._id,
 		before: {

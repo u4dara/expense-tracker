@@ -6,10 +6,25 @@ import AppError from "../utils/appError.js";
 //@route   GET /api/v1/categories
 //@access  Private
 export const getAllCategories = asyncHandler(async (req, res) => {
-	const categories = await Category.find({ user: req.user._id }).sort({
+	const activeCategories = await Category.find({
+		user: req.user._id,
+		isArchived: false,
+	}).sort({
 		createdAt: -1,
 	});
-	res.status(200).json({ success: true, data: categories });
+	const archivedCategories = await Category.find({
+		user: req.user._id,
+		isArchived: true,
+	}).sort({
+		createdAt: -1,
+	});
+	res.status(200).json({
+		success: true,
+		data: {
+			active: activeCategories,
+			archived: archivedCategories,
+		},
+	});
 });
 
 //@desc    Add new category
@@ -23,7 +38,10 @@ export const addCategory = asyncHandler(async (req, res) => {
 
 	const existingCategory = await Category.findOne({ name });
 	if (existingCategory) {
-		throw new AppError("Previously created Category is already existing for this category and period", 400);
+		throw new AppError(
+			"Previously created Category is already existing for this category and period",
+			400,
+		);
 	}
 
 	const newCategory = await Category.create({
@@ -33,7 +51,7 @@ export const addCategory = asyncHandler(async (req, res) => {
 		color: color || "#aac0e3",
 	});
 
-  // Send data to logger middleware
+	// Send data to logger middleware
 	req.audit = {
 		action: "create",
 		entity: "Category",
@@ -57,18 +75,15 @@ export const addCategory = asyncHandler(async (req, res) => {
 //@access  Private
 export const updateCategory = asyncHandler(async (req, res) => {
 	const existingCategory = await Category.findById(req.params.id);
-	if (!existingCategory) {
-		throw new AppError("Selected Category was not found. Please select another one!", 404);
-	}
-
-	// Find whether user is logged in user
-	const loggedInUser = req.user;
-	if (!loggedInUser) {
-		throw new AppError("Logged in User was not found. Please Sign-in", 401);
+	if (existingCategory?.isArchived === true) {
+		throw new AppError(
+			"Selected Category was not found. Please select another one!",
+			404,
+		);
 	}
 
 	// Check if the logged in user is the owner of the category
-	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
+	if (existingCategory.user.toString() !== req.user._id.toString()) {
 		throw new AppError("User is not authorized to update this Category.", 403);
 	}
 
@@ -83,16 +98,16 @@ export const updateCategory = asyncHandler(async (req, res) => {
 		{ new: true },
 	);
 
-  // Send data to logger middleware
+	// Send data to logger middleware
 	req.audit = {
 		action: "update",
 		entity: "Category",
 		entityID: existingCategory._id,
-    before: {
-      name: existingCategory.name,
+		before: {
+			name: existingCategory.name,
 			type: existingCategory.type,
 			color: existingCategory.color,
-    },
+		},
 		after: {
 			name: updatedCategory.name,
 			type: updatedCategory.type,
@@ -107,13 +122,65 @@ export const updateCategory = asyncHandler(async (req, res) => {
 	});
 });
 
+//@desc    Archive a category
+//@route   PUT /api/v1/categories/archive/:id
+//@access  Private
+export const archiveCategory = asyncHandler(async (req, res) => {
+	const existingCategory = await Category.findById(req.params.id);
+	if (existingCategory?.isArchived === true) {
+		throw new AppError(
+			"Selected Category was not found. Please select another one!",
+			404,
+		);
+	}
+
+	// Check if the logged in user is the owner of the category
+	if (existingCategory.user.toString() !== req.user._id.toString()) {
+		throw new AppError("User is not authorized to update this Category.", 403);
+	}
+
+	const archivedCategory = await Category.findByIdAndUpdate(
+		req.params.id,
+		{ $set: { isArchived: true } },
+		{ new: true },
+	);
+
+	// Send data to logger middleware
+	req.audit = {
+		action: "archive",
+		entity: "Category",
+		entityID: existingCategory._id,
+		before: {
+			name: existingCategory.name,
+			type: existingCategory.type,
+			color: existingCategory.color,
+			isArchived: existingCategory.isArchived,
+		},
+		after: {
+			name: archivedCategory.name,
+			type: archivedCategory.type,
+			color: archivedCategory.color,
+			isArchived: archivedCategory.isArchived,
+		},
+	};
+
+	res.status(200).json({
+		success: true,
+		message: "Category updated successfully",
+		data: archivedCategory,
+	});
+});
+
 //@desc    Delete a category
 //@route   DELETE /api/v1/categories/:id
 //@access  Private
 export const deleteCategory = asyncHandler(async (req, res) => {
 	const existingCategory = await Category.findById(req.params.id);
 	if (!existingCategory) {
-		throw new AppError("Selected Category was not found. Please select another one!", 404);
+		throw new AppError(
+			"Selected Category was not found. Please select another one!",
+			404,
+		);
 	}
 
 	// Find whether user is logged in user
@@ -123,21 +190,21 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 	}
 
 	// Check if the logged in user is the owner of the category
-	if (existingCategory.user.toString() !== loggedInUser._id.toString()) {
+	if (existingCategory.user.toString() !== req.user._id.toString()) {
 		throw new AppError("User is not authorized to update this Category", 403);
 	}
 	await Category.findByIdAndDelete(req.params.id);
 
-    // Send data to logger middleware
+	// Send data to logger middleware
 	req.audit = {
 		action: "delete",
 		entity: "Category",
 		entityID: existingCategory._id,
-    before: {
-      name: existingCategory.name,
+		before: {
+			name: existingCategory.name,
 			type: existingCategory.type,
 			color: existingCategory.color,
-    },
+		},
 	};
 
 	res.status(200).json({

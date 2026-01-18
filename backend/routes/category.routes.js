@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
 	addCategory,
+	archiveCategory,
 	deleteCategory,
 	getAllCategories,
 	updateCategory,
@@ -17,5 +18,6 @@ transactionCategoryRouter
 	.route("/:id")
 	.put(protect, updateCategory)
 	.delete(protect, deleteCategory);
+transactionCategoryRouter.put("/archive/:id", protect, archiveCategory);
 
 export default transactionCategoryRouter;
