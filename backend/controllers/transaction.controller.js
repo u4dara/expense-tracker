@@ -11,7 +11,7 @@ export const getTransactions = asyncHandler(async (req, res) => {
 		user: req.user._id,
 		deletedAt: null,
 	}).sort({
-		createdAt: -1,
+		date: -1,
 	});
 	res.status(200).json({ success: true, data: allTransactions });
 });
@@ -80,7 +80,7 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 	}
 
 	// Check if the logged in user is the owner of the transaction
-	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
+	if (existingTransaction.user.toString() !== req.user._id.toString()) {
 		throw new AppError("User not authorized to update this transaction", 403);
 	}
 
@@ -98,7 +98,10 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 			user: req.user._id,
 		});
 		if (!selectedCategory) {
-			throw new AppError("Category does not exist", 404);
+			throw new AppError(
+				"Selected Category was not found. Please select another one!",
+				404,
+			);
 		}
 		updatedData.category = selectedCategory._id;
 		updatedData.type = selectedCategory.type;
@@ -121,6 +124,7 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 			type: existingTransaction.type,
 			category: existingTransaction.category,
 			date: existingTransaction.date,
+			deletedAt: existingTransaction.deletedAt,
 		},
 		after: {
 			title: updatedTransaction.title,
@@ -128,6 +132,7 @@ export const updateTransaction = asyncHandler(async (req, res) => {
 			type: updatedTransaction.type,
 			category: updatedTransaction.category,
 			date: updatedTransaction.date,
+			deletedAt: updatedTransaction.deletedAt,
 		},
 	};
 
@@ -151,7 +156,7 @@ export const softDeleteTransaction = asyncHandler(async (req, res) => {
 	}
 
 	// Check if the logged in user is the owner of the transaction
-	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
+	if (existingTransaction.user.toString() !== req.user._id.toString()) {
 		throw new AppError(
 			"User is not authorized to update this Transaction",
 			403,
@@ -191,50 +196,125 @@ export const softDeleteTransaction = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		success: true,
-		message: "Transaction deleted successfully",
+		message: "Transaction Soft-Deleted successfully",
 		data: deletedTransaction,
 	});
 });
 
-//@desc    Permanently Delete a transaction
-//@route   DELETE /api/v1/transactions/:id
+//@desc    Get the Soft-Deleted transactions
+//@route   GET /api/v1/transactions/bin
 //@access  Private
-// export const deleteTransaction = asyncHandler(async (req, res) => {
-// 	const existingTransaction = await Transaction.findById(req.params.id);
-// 	if (!existingTransaction) {
-// 		throw new AppError(
-// 			"Selected Transaction was not found. Please select another one!",
-// 			404,
-// 		);
-// 	}
+export const getSoftDeletedTransactions = asyncHandler(async (req, res) => {
+	const transactions = await Transaction.find({
+		user: req.user._id,
+		deletedAt: { $ne: null },
+	}).sort({ updatedAt: -1 });
 
-// 	// Check if the logged in user is the owner of the transaction
-// 	if (existingTransaction.user.toString() !== loggedInUser._id.toString()) {
-// 		throw new AppError(
-// 			"User is not authorized to update this Transaction",
-// 			403,
-// 		);
-// 	}
+	if (!transactions) throw new AppError("No any deleted transactions yet", 404);
 
-// 	const deletedTransaction = await Transaction.findByIdAndDelete(req.params.id);
+	res.status(200).json({
+		success: true,
+		message: "Soft-Deleted Transactions successfully fetched",
+		data: transactions,
+	});
+});
 
-// 	// Send data to logger middleware
-// 	req.audit = {
-// 		action: "delete",
-// 		entity: "Transaction",
-// 		entityID: existingTransaction._id,
-// 		before: {
-// 			title: existingTransaction.title,
-// 			amount: existingTransaction.amount,
-// 			type: existingTransaction.type,
-// 			category: existingTransaction.category,
-// 			date: existingTransaction.date,
-// 		},
-// 	};
+//@desc    Restore a Soft-Deleted transaction
+//@route   PUT /api/v1/transactions/bin/:id
+//@access  Private
+export const restoreSoftDeletedTransaction = asyncHandler(async (req, res) => {
+	const existingTransaction = await Transaction.findById(req.params.id);
+	if (existingTransaction?.deletedAt === null) {
+		throw new AppError(
+			"Selected Transaction was not found. Please select another one!",
+			404,
+		);
+	}
 
-// 	res.status(200).json({
-// 		success: true,
-// 		message: "Transaction deleted successfully",
-// 		data: deletedTransaction,
-// 	});
-// });
+	// Check if the logged in user is the owner of the transaction
+	if (existingTransaction.user.toString() !== req.user._id.toString()) {
+		throw new AppError(
+			"User is not authorized to update this Transaction",
+			403,
+		);
+	}
+
+	const restoredTransaction = await Transaction.findByIdAndUpdate(
+		req.params.id,
+		{
+			$set: { deletedAt: null },
+		},
+		{ new: true },
+	);
+
+	req.audit = {
+		action: "restore",
+		entity: "Transaction",
+		entityID: existingTransaction._id,
+		before: {
+			title: existingTransaction.title,
+			amount: existingTransaction.amount,
+			type: existingTransaction.type,
+			category: existingTransaction.category,
+			date: existingTransaction.date,
+			deletedAt: existingTransaction.deletedAt,
+		},
+		after: {
+			title: restoredTransaction.title,
+			amount: restoredTransaction.amount,
+			type: restoredTransaction.type,
+			category: restoredTransaction.category,
+			date: restoredTransaction.date,
+			deletedAt: restoredTransaction.deletedAt,
+		},
+	};
+
+	res.status(200).json({
+		success: true,
+		message: "Transaction Restored successfully",
+		data: restoredTransaction,
+	});
+});
+
+//@desc    Permanently Delete a transaction
+//@route   DELETE /api/v1/transactions/bin/:id
+//@access  Private
+export const permanentDeleteTransaction = asyncHandler(async (req, res) => {
+	const existingTransaction = await Transaction.findById(req.params.id);
+	if (existingTransaction?.deletedAt === null) {
+		throw new AppError(
+			"Selected Transaction was not found. Please select another one!",
+			404,
+		);
+	}
+
+	// Check if the logged in user is the owner of the transaction
+	if (existingTransaction.user.toString() !== req.user._id.toString()) {
+		throw new AppError(
+			"User is not authorized to update this Transaction",
+			403,
+		);
+	}
+
+	const deletedTransaction = await Transaction.findByIdAndDelete(req.params.id);
+
+	// Send data to logger middleware
+	req.audit = {
+		action: "permanent-delete",
+		entity: "Transaction",
+		entityID: existingTransaction._id,
+		before: {
+			title: existingTransaction.title,
+			amount: existingTransaction.amount,
+			type: existingTransaction.type,
+			category: existingTransaction.category,
+			date: existingTransaction.date,
+		},
+	};
+
+	res.status(200).json({
+		success: true,
+		message: "Transaction Permanently Deleted successfully",
+		data: deletedTransaction,
+	});
+});
