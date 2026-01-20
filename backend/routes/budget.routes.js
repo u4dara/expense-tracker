@@ -1,8 +1,11 @@
 import { Router } from "express";
 import {
 	addBudget,
-	deleteBudget,
 	getBudgets,
+	getSoftDeletedBudgets,
+	permanentDeleteBudget,
+	restoreSoftDeletedBudget,
+	softDeleteBudget,
 	updateBudget,
 } from "../controllers/budget.controller.js";
 import { getBudgetVsExpenseUsage } from "../controllers/budgetUsage.controller.js";
@@ -14,7 +17,12 @@ budgetRouter.route("/").get(protect, getBudgets).post(protect, addBudget);
 budgetRouter
 	.route("/:id")
 	.put(protect, updateBudget)
-	.delete(protect, deleteBudget);
+	.delete(protect, softDeleteBudget);
+budgetRouter.get("/bin", protect, getSoftDeletedBudgets);
+budgetRouter
+	.route("/bin/:id")
+	.put(protect, restoreSoftDeletedBudget)
+	.delete(protect, permanentDeleteBudget);
 budgetRouter.get("/usage", protect, getBudgetVsExpenseUsage);
 
 export default budgetRouter;

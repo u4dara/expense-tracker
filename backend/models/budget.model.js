@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const BudgetSchema = new mongoose.Schema(
 	{
+    title: {
+      type: String,
+      required: true,
+      minLength: 3,
+      maxLength: 50
+    },
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,

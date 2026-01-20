@@ -6,8 +6,8 @@ import {
 } from "../services/summary.service.js";
 import AppError from "../utils/appError.js";
 
-//@desc    Get total income, expenses and balance for all time
-//@route   GET /api/v1/expenses/all
+//@desc    Get total income, expenses and balance summary for all time records
+//@route   GET /api/v1/summary/all
 //@access  Private
 export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 	const summary = await findAllTimeTransactionSummary(req.user._id);
@@ -23,8 +23,8 @@ export const getAllTimeTransactionSummary = asyncHandler(async (req, res) => {
 	});
 });
 
-//@desc    Get total expenses for a month
-//@route   GET /api/v1/expenses/month
+//@desc    Get expenses summary for a month
+//@route   GET /api/v1/summary/year
 //@access  Private
 export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 	const { year, month } = req.query;
@@ -52,7 +52,7 @@ export const getMonthOrYearSummary = asyncHandler(async (req, res) => {
 });
 
 //@desc    Get total expenses for a month in category wise
-//@route   GET /api/v1/expenses/category-wise
+//@route   GET /api/v1/summary/category-wise
 //@access  Private
 export const getCategoryWiseExpenses = asyncHandler(async (req, res) => {
 	const { year, month } = req.query;

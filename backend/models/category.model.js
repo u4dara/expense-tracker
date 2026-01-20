@@ -6,8 +6,8 @@ const CategorySchema = new mongoose.Schema(
 			type: String,
 			required: [true, "Please add a category name"],
 			trim: true,
-			minlength: 3,
-			maxlength: 50,
+			minLength: 3,
+			maxLength: 50,
 			unique: true,
 		},
 		user: {

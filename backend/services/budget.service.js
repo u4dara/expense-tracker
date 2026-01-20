@@ -4,6 +4,7 @@ export const findBudgets = async (userID, year, month) => {
 	const matchState = {
 		user: userID,
 		year,
+    deletedAt: null
 	};
 
 	if (month !== null) {
@@ -28,6 +29,7 @@ export const findBudgets = async (userID, year, month) => {
 		{
 			$project: {
 				_id: 1,
+        title: 1,
 				amount: 1,
 				year: 1,
 				month: 1,
