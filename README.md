@@ -10,13 +10,14 @@ A full‑featured Expense Tracker REST API built with Node.js, Express, MongoDB,
 * Protected routes using auth middleware
 
 ### 💸 Transactions
-* Create, update, and delete income & expense transactions
+* Create, update, soft-delete, restore, permanent-delete income & expense transactions
 * Category‑based transactions
 * User‑specific data isolation
 
 ### 🗂 Categories
 * User‑defined transaction categories
 * Category type support (income/expense)
+* Archive and Unarchive Categories
 * Color-coded categories for UI usage
 
 ### 📊 Expense Analytics
@@ -32,7 +33,7 @@ A full‑featured Expense Tracker REST API built with Node.js, Express, MongoDB,
 
 ### 🧾 Audit Logs
 * Automatic audit logging via middleware
-* Tracks CREATE / UPDATE / DELETE actions
+* Tracks CREATE / UPDATE / SOFT-DELETE / PERMANENT-DELETE / RESTORE / ARCHIVE / UNARCHIVE actions
 * Logs before & after snapshots
 * Stores metadata (IP, user agent)
 
