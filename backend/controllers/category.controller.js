@@ -166,8 +166,57 @@ export const archiveCategory = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		success: true,
-		message: "Category updated successfully",
+		message: "Category Archived successfully",
 		data: archivedCategory,
+	});
+});
+
+//@desc    Unarchive a category
+//@route   PUT /api/v1/categories/unarchive/:id
+//@access  Private
+export const unArchiveCategory = asyncHandler(async (req, res) => {
+	const existingCategory = await Category.findById(req.params.id);
+	if (existingCategory?.isArchived === false) {
+		throw new AppError(
+			"Selected Category was not found. Please select another one!",
+			404,
+		);
+	}
+
+	// Check if the logged in user is the owner of the category
+	if (existingCategory.user.toString() !== req.user._id.toString()) {
+		throw new AppError("User is not authorized to update this Category.", 403);
+	}
+
+	const unArchivedCategory = await Category.findByIdAndUpdate(
+		req.params.id,
+		{ $set: { isArchived: false } },
+		{ new: true },
+	);
+
+	// Send data to logger middleware
+	req.audit = {
+		action: "unarchive",
+		entity: "Category",
+		entityID: existingCategory._id,
+		before: {
+			name: existingCategory.name,
+			type: existingCategory.type,
+			color: existingCategory.color,
+			isArchived: existingCategory.isArchived,
+		},
+		after: {
+			name: unArchivedCategory.name,
+			type: unArchivedCategory.type,
+			color: unArchivedCategory.color,
+			isArchived: unArchivedCategory.isArchived,
+		},
+	};
+
+	res.status(200).json({
+		success: true,
+		message: "Category Unarchived successfully",
+		data: unArchivedCategory,
 	});
 });
 
@@ -197,7 +246,7 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 
 	// Send data to logger middleware
 	req.audit = {
-		action: "delete",
+		action: "permanent-delete",
 		entity: "Category",
 		entityID: existingCategory._id,
 		before: {

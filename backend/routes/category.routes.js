@@ -4,6 +4,7 @@ import {
 	archiveCategory,
 	deleteCategory,
 	getAllCategories,
+	unArchiveCategory,
 	updateCategory,
 } from "../controllers/category.controller.js";
 import protect from "../middlewares/auth.middleware.js";
@@ -19,5 +20,6 @@ transactionCategoryRouter
 	.put(protect, updateCategory)
 	.delete(protect, deleteCategory);
 transactionCategoryRouter.put("/archive/:id", protect, archiveCategory);
+transactionCategoryRouter.put("/unarchive/:id", protect, unArchiveCategory);
 
 export default transactionCategoryRouter;

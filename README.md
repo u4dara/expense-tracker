@@ -102,19 +102,26 @@ http://localhost:5500
 * ` GET /api/v1/categories `
 * ` POST /api/v1/categories `
 * ` PUT /api/v1/categories/:id `
-* `DELETE /api/v1/categories/:id`
+* ` DELETE /api/v1/categories/:id `
+* ` PUT /api/v1/categories/archive `
 
 ### Transactions
 * ` GET /api/v1/transactions `
 * ` POST /api/v1/transactions `
 * ` PUT /api/v1/transactions/:id `
 * ` DELETE /api/v1/transactions/:id `
+* ` GET /api/v1/transactions/bin `
+* ` PUT /api/v1/transactions/bin/:id `
+* ` DELETE /api/v1/transactions/bin/:id `
 
 ### Budgets
 * ` GET /api/v1/budgets?year=2026&month=3 `
 * ` POST /api/v1/budgets `
 * ` PUT /api/v1/budgets/:id `
 * ` DELETE /api/v1/budgets/:id `
+* ` GET /api/v1/budgets/bin `
+* ` PUT /api/v1/budgets/bin/:id `
+* ` DELETE /api/v1/budgets/bin/:id `
 
 ### Analytics
 * ` GET /api/v1/trends/monthly?year=2025 `
