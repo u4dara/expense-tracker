@@ -98,12 +98,16 @@ http://localhost:5500
 * ` POST /api/v1/auth/sign-in `
 * ` POST /api/v1/auth/sign-out `
 
+### User
+* ` GET /api/v1/users/me `
+
 ### Categories
 * ` GET /api/v1/categories `
 * ` POST /api/v1/categories `
 * ` PUT /api/v1/categories/:id `
 * ` DELETE /api/v1/categories/:id `
-* ` PUT /api/v1/categories/archive `
+* ` PUT /api/v1/categories/archive/:id `
+* ` PUT /api/v1/categories/unarchive/:id `
 
 ### Transactions
 * ` GET /api/v1/transactions `
@@ -115,17 +119,20 @@ http://localhost:5500
 * ` DELETE /api/v1/transactions/bin/:id `
 
 ### Budgets
-* ` GET /api/v1/budgets?year=2026&month=3 `
+* ` GET /api/v1/budgets `
 * ` POST /api/v1/budgets `
 * ` PUT /api/v1/budgets/:id `
 * ` DELETE /api/v1/budgets/:id `
 * ` GET /api/v1/budgets/bin `
 * ` PUT /api/v1/budgets/bin/:id `
 * ` DELETE /api/v1/budgets/bin/:id `
+* ` GET /api/v1/budgets/usage `
 
 ### Analytics
-* ` GET /api/v1/trends/monthly?year=2025 `
-* ` GET /api/v1/summary?year=2025&month=3 `
+* ` GET /api/v1/trends/monthly `
+* ` GET /api/v1/summary/all `
+* ` GET /api/v1/summary/year `
+* ` GET /api/v1/summary/category-wise `
 
 ## 🛠 Future Improvements
 ### - Core Usability Improvements -
