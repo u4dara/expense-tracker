@@ -1,18 +1,18 @@
 import colors from "colors";
 import mongoose from "mongoose";
-import { MONGODB_URI, MONGODB_URI_TEST, NODE_ENV } from "../configs/env.js";
+import { env } from "../configs/env.js";
 
-if (!MONGODB_URI && !MONGODB_URI_TEST) {
+if (!env.MONGODB_URI && !env.MONGODB_URI_TEST) {
 	throw new Error("MongoDB URI is missing!!");
 }
 
 const connectToDatabase = async () => {
 	const mongoURI =
-		process.env.NODE_ENV === "test" ? MONGODB_URI_TEST : MONGODB_URI;
+		process.env.NODE_ENV === "test" ? env.MONGODB_URI_TEST : env.MONGODB_URI;
 	try {
 		await mongoose.connect(mongoURI);
 		console.log(
-			`Successfully connected to Database in ${colors.magenta(`${NODE_ENV}`)}`
+			`Successfully connected to Database in ${colors.magenta(`${env.NODE_ENV}`)}`
 				.yellow,
 		);
 	} catch (error) {
