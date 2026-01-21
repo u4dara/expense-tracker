@@ -1,6 +1,10 @@
 import AuditLog from "../models/auditLog.model.js";
 
 const logger = (req, res, next) => {
+	if (process.env.NODE_ENV === "test") {
+		return next();
+	}
+
 	res.on("finish", async () => {
 		if (!req.audit || res.statusCode >= 400) return;
 
@@ -14,9 +18,9 @@ const logger = (req, res, next) => {
 				entityID,
 				before: before || null,
 				after: after || null,
-				metadata: {
-					ip: req.ip,
-					userAgent: req.headers["user-agent"],
+				metaData: {
+					ip: req.ip || "unknown",
+					userAgent: req.headers["user-agent"] || "unknown",
 				},
 			});
 		} catch (error) {

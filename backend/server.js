@@ -1,38 +1,7 @@
 import colors from "colors";
-import express from "express";
-
-import { PORT } from "./configs/env.js";
-import limiter from "./configs/rateLimit.js";
+import app from "./app.js";
+import { PORT } from "./configs/env.local.js";
 import connectToDatabase from "./database/mongodb.js";
-import errorHandler from "./middlewares/error.middleware.js";
-import logger from "./middlewares/log.middleware.js";
-import authRouter from "./routes/auth.routes.js";
-import budgetRouter from "./routes/budget.routes.js";
-import transactionCategoryRouter from "./routes/category.routes.js";
-import summaryRouter from "./routes/summary.routes.js";
-import transactionRouter from "./routes/transaction.routes.js";
-import trendRouter from "./routes/trend.routes.js";
-import userRouter from "./routes/user.routes.js";
-
-const app = express();
-
-// Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(limiter); // Rate Limiting Middleware
-app.use(logger); // Logger Middleware
-
-// Routes
-app.use("/api/v1/transactions", transactionRouter);
-app.use("/api/v1/categories", transactionCategoryRouter);
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/summary", summaryRouter);
-app.use("/api/v1/trends", trendRouter);
-app.use("/api/v1/budgets", budgetRouter);
-
-// Error Handler Middleware
-app.use(errorHandler);
 
 const startServer = async () => {
 	await connectToDatabase();
@@ -41,4 +10,6 @@ const startServer = async () => {
 	});
 };
 
-startServer();
+if (process.env.NODE_ENV !== "test") {
+	startServer();
+}
