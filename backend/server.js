@@ -1,6 +1,6 @@
 import colors from "colors";
 import app from "./app.js";
-import { PORT } from "./configs/env.local.js";
+import { PORT } from "./configs/env.js";
 import connectToDatabase from "./database/mongodb.js";
 
 const startServer = async () => {

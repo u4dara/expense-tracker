@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { MONGODB_URI_TEST } from "../configs/env.local";
-
-dotenv.config({ path: ".env.test" });
+import { MONGODB_URI_TEST } from "../configs/env";
 
 beforeAll(async () => {
 	if (!MONGODB_URI_TEST) {

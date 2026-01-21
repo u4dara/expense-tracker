@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../configs/env.local.js";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../configs/env.js";
 
 const generateToken = (userId) => {
 	return jwt.sign(

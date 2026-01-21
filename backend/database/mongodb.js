@@ -1,10 +1,6 @@
 import colors from "colors";
 import mongoose from "mongoose";
-import {
-	MONGODB_URI,
-	MONGODB_URI_TEST,
-	NODE_ENV,
-} from "../configs/env.local.js";
+import { MONGODB_URI, MONGODB_URI_TEST, NODE_ENV } from "../configs/env.js";
 
 if (!MONGODB_URI && !MONGODB_URI_TEST) {
 	throw new Error("MongoDB URI is missing!!");
