@@ -40,7 +40,7 @@ describe("Transaction CRUD Tests", () => {
 	});
 
 	describe("POST /api/v1/transactions", () => {
-		test("Create a new Transaction", async () => {
+		test("Should create a new Transaction", async () => {
 			const categoryName = `Food ${Date.now()}`;
 			await request(app)
 				.post("/api/v1/categories")
@@ -62,7 +62,7 @@ describe("Transaction CRUD Tests", () => {
 	});
 
 	describe("PUT /api/v1/transactions/:id", () => {
-		test("Update an existing Transaction", async () => {
+		test("Should update an existing Transaction", async () => {
 			const categoryName = `Food ${Date.now()}`;
 			await request(app)
 				.post("/api/v1/categories")
@@ -90,7 +90,7 @@ describe("Transaction CRUD Tests", () => {
 	});
 
 	describe("DELETE /api/v1/transactions/:id", () => {
-		test("Delete an existing Transaction", async () => {
+		test("Should soft-delete an existing Transaction", async () => {
 			const categoryName = `Food ${Date.now()}`;
 			await request(app)
 				.post("/api/v1/categories")
@@ -107,6 +107,62 @@ describe("Transaction CRUD Tests", () => {
 				});
 			const res = await request(app)
 				.delete(`/api/v1/transactions/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`);
+			expect(res.statusCode).toBe(200);
+			expect(res.body.success).toBe(true);
+			expect(res.body.data.deletedAt).toBeDefined();
+		});
+	});
+
+	describe("DELETE /api/v1/transactions/bin/:id", () => {
+		test("Should restore a soft-deleted Transaction", async () => {
+			const categoryName = `Food ${Date.now()}`;
+			await request(app)
+				.post("/api/v1/categories")
+				.set("Authorization", `Bearer ${token}`)
+				.send({ name: categoryName, type: "expense" });
+			const transaction = await request(app)
+				.post("/api/v1/transactions")
+				.set("Authorization", `Bearer ${token}`)
+				.send({
+					title: "test transaction",
+					amount: "1000",
+					category: categoryName,
+					date: Date.now(),
+				});
+			await request(app)
+				.delete(`/api/v1/transactions/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`);
+			const res = await request(app)
+				.put(`/api/v1/transactions/bin/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`);
+			expect(res.statusCode).toBe(200);
+			expect(res.body.success).toBe(true);
+			expect(res.body.data.deletedAt).toBeNull();
+		});
+	});
+
+	describe("DELETE /api/v1/transactions/bin/:id", () => {
+		test("Should restore a soft-deleted Transaction", async () => {
+			const categoryName = `Food ${Date.now()}`;
+			await request(app)
+				.post("/api/v1/categories")
+				.set("Authorization", `Bearer ${token}`)
+				.send({ name: categoryName, type: "expense" });
+			const transaction = await request(app)
+				.post("/api/v1/transactions")
+				.set("Authorization", `Bearer ${token}`)
+				.send({
+					title: "test transaction",
+					amount: "1000",
+					category: categoryName,
+					date: Date.now(),
+				});
+			await request(app)
+				.delete(`/api/v1/transactions/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`);
+			const res = await request(app)
+				.delete(`/api/v1/transactions/bin/${transaction.body.data._id}`)
 				.set("Authorization", `Bearer ${token}`);
 			expect(res.statusCode).toBe(200);
 			expect(res.body.success).toBe(true);
