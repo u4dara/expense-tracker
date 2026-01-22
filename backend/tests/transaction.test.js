@@ -41,7 +41,7 @@ describe("Transaction CRUD Tests", () => {
 
 	describe("POST /api/v1/transactions", () => {
 		test("Create a new Transaction", async () => {
-         const categoryName = `Food ${Date.now()}`;
+			const categoryName = `Food ${Date.now()}`;
 			await request(app)
 				.post("/api/v1/categories")
 				.set("Authorization", `Bearer ${token}`)
@@ -57,32 +57,59 @@ describe("Transaction CRUD Tests", () => {
 				});
 			expect(res.statusCode).toBe(201);
 			expect(res.body.success).toBe(true);
+			expect(res.body.data._id).toBeDefined();
 		});
 	});
 
-	// describe("PUT /api/v1/transactions/:id", () => {
-	// 	test("Update existing Transaction", async () => {
-	// 		const categoryName = "test category";
-	// 		const categoryType = "expense";
-	// 		await createNewCategory(token, categoryName, categoryType);
-	// 		const transaction = await request(app)
-	// 			.post("/api/v1/transactions")
-	// 			.set("Authorization", `Bearer ${token}`)
-	// 			.send({
-	// 				title: "test transaction",
-	// 				amount: "1000",
-	// 				category: categoryName,
-	// 				date: Date.now(),
-	// 			});
-	// 		const res = await request(app)
-	// 			.put(`/api/v1/transaction/${transaction.data._id}`)
-	// 			.set("Authorization", `Bearer ${token}`)
-	// 			.send({
-	// 				title: "test transaction updated",
-	// 			});
-	// 		expect(res.statusCode).toBe(200);
-	// 		expect(res.body.success).toBe(true);
-	// 		expect(res.body.data.title).toBe("test transaction updated");
-	// 	});
-	// });
+	describe("PUT /api/v1/transactions/:id", () => {
+		test("Update an existing Transaction", async () => {
+			const categoryName = `Food ${Date.now()}`;
+			await request(app)
+				.post("/api/v1/categories")
+				.set("Authorization", `Bearer ${token}`)
+				.send({ name: categoryName, type: "expense" });
+			const transaction = await request(app)
+				.post("/api/v1/transactions")
+				.set("Authorization", `Bearer ${token}`)
+				.send({
+					title: "test transaction",
+					amount: "1000",
+					category: categoryName,
+					date: Date.now(),
+				});
+			const res = await request(app)
+				.put(`/api/v1/transactions/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`)
+				.send({
+					title: "test transaction updated",
+				});
+			expect(res.statusCode).toBe(200);
+			expect(res.body.success).toBe(true);
+			expect(res.body.data.title).toBe("test transaction updated");
+		});
+	});
+
+	describe("DELETE /api/v1/transactions/:id", () => {
+		test("Delete an existing Transaction", async () => {
+			const categoryName = `Food ${Date.now()}`;
+			await request(app)
+				.post("/api/v1/categories")
+				.set("Authorization", `Bearer ${token}`)
+				.send({ name: categoryName, type: "expense" });
+			const transaction = await request(app)
+				.post("/api/v1/transactions")
+				.set("Authorization", `Bearer ${token}`)
+				.send({
+					title: "test transaction",
+					amount: "1000",
+					category: categoryName,
+					date: Date.now(),
+				});
+			const res = await request(app)
+				.delete(`/api/v1/transactions/${transaction.body.data._id}`)
+				.set("Authorization", `Bearer ${token}`);
+			expect(res.statusCode).toBe(200);
+			expect(res.body.success).toBe(true);
+		});
+	});
 });

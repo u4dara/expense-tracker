@@ -40,7 +40,7 @@ describe("Category CRUD Tests", () => {
 	});
 
 	describe("POST /api/v1/categories", () => {
-		test("Should create category", async () => {
+		test("Should create a new category", async () => {
 			const res = await request(app)
 				.post("/api/v1/categories")
 				.set("Authorization", `Bearer ${token}`)
