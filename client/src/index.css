@@ -1,1 +1,78 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-Light.ttf';
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-Regular.ttf';
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-Medium.ttf';
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-SemiBold.ttf';
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-Bold.ttf';
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: Nunito;
+  src: '../src/assets/fonts/Nunito-ExtraBold.ttf';
+  font-weight: 800;
+  font-style: normal;
+}
+
+@theme {
+  /* Screen Sizes */
+  --breakpoint-xs: 475px;
+
+  /* Fonts */
+  --font-nunito: Nunito, sans-serif;
+
+  /* Primary Colors */
+  --color-brand-green: #2e9949;
+
+  /* Secondary Colors */
+  --color-secondary-blue: #3d21f9;
+  --color-secondary-red: #d15444;
+  --color-secondary-yellow: #f6cc1b;
+
+  /* Text Colors */
+  --color-text-green: #1a7633;
+  --color-text-red: #b24638;
+  --color-text-blue: #0010ec;
+  --color-text-yellow: #f29c0b;
+
+  /* Black Shades */
+  --color-black-500: ##7b7b7b;
+  --color-black-700: #434343;
+
+  /* White Tints */
+  --color-white-200: #f5f5f5;
+  --color-white-400: #dedede;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply font-nunito;
+  }
+}

@@ -1,5 +1,36 @@
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
+
+import AuthLayout from './layouts/AuthLayout';
+import MainLayout from './layouts/MainLayout';
+import Dashboard from './pages/Dashboard';
+import NotFoundPage from './pages/NotFoundPage';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+
 const App = () => {
-  return <div>App</div>;
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        {/* Routes that use common layout with Navbar */}
+        <Route element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+
+        {/* Routes that do not use Navbar */}
+        <Route element={<AuthLayout />}>
+          <Route path='/auth/sign-up' element={<SignUp />} />
+          <Route path='/auth/sign-in' element={<SignIn />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Route>
+      </>,
+    ),
+  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
