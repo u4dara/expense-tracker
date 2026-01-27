@@ -32,7 +32,9 @@ const SignUp = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Navbar */}
-        <nav className='w-full p-4 bg-white/10 backdrop-blur-md'>navbar</nav>
+        <nav className='w-full p-4 bg-white/10 backdrop-blur-md'>
+          <img src='/src/assets/brand-logo.png' className='w-40'></img>
+        </nav>
         <div className='grow flex items-center justify-center px-6 py-12'>
           {/* Form Card */}
           <div className='w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl ring-1 ring-gray-900/5 sm:p-10'>
@@ -45,7 +47,7 @@ const SignUp = () => {
               </p>
             </div>
 
-            <div className='mt-10'>
+            <div className='mt-5'>
               <form onSubmit={onSubmit} method='POST' className='space-y-5'>
                 <div>
                   <label
@@ -141,7 +143,7 @@ const SignUp = () => {
                 </div>
               </form>
 
-              <p className='mt-8 text-center text-sm text-gray-500'>
+              <p className='mt-4 text-center text-sm text-gray-500'>
                 Already have an account?{' '}
                 <NavLink
                   to='/auth/sign-in'
