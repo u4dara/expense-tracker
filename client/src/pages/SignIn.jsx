@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+import Spinner from '../components/Spinner';
+
 const SignIn = () => {
   const backgroundImage = '/src/assets/bg-gradient.png';
   const [formData, setFormData] = useState({
@@ -79,7 +81,7 @@ const SignIn = () => {
                     <div className='test-sm'>
                       <NavLink
                         to=''
-                        className='font-semibold text-text-green hover:text-gray-500'
+                        className='font-semibold text-text-green hover:text-brand-green'
                       >
                         Forgot password?
                       </NavLink>
@@ -102,7 +104,7 @@ const SignIn = () => {
                 <div className='pt-2'>
                   <button
                     type='submit'
-                    className='flex w-full justify-center rounded-md bg-text-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green transition-colors'
+                    className='flex w-full justify-center rounded-md bg-text-green px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green transition-colors'
                   >
                     Sign in
                   </button>

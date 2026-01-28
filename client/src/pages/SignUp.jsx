@@ -1,5 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import * as z from 'zod';
+
+import Spinner from '../components/Spinner';
+import { reset, signUp } from '../features/auth/authSlice';
+import signUpSchema from '../schemas/userSchema';
 
 const SignUp = () => {
   const backgroundImage = '/src/assets/bg-gradient.png';
@@ -13,6 +20,23 @@ const SignUp = () => {
   const { name, email, password, confirmPassword } = formData;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth,
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+      dispatch(reset());
+    }
+
+    if (isSuccess || user) {
+      navigate('/');
+      dispatch(reset());
+    }
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onChange = (event) => {
     setFormData((prevState) => ({
@@ -23,9 +47,33 @@ const SignUp = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
+
+    if (!name || !email || !password || !confirmPassword) {
+      return toast.error('All fields are required!');
+    }
+
+    const result = signUpSchema.safeParse(formData);
+
+    if (!result.success) {
+      toast.error(result.error.errors[0].message);
+      return;
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      };
+      dispatch(signUp(userData));
+    }
   };
 
-  return (
+  return isLoading ? (
+    <>
+      <div className='flex justify-center items-center h-screen bg-gray-100'>
+        <Spinner loading={true} />
+      </div>
+    </>
+  ) : (
     <>
       <div
         className='flex min-h-screen flex-col bg-cover bg-center bg-no-repeat'
@@ -48,7 +96,12 @@ const SignUp = () => {
             </div>
 
             <div className='mt-5'>
-              <form onSubmit={onSubmit} method='POST' className='space-y-5'>
+              <form
+                onSubmit={onSubmit}
+                method='POST'
+                className='space-y-5'
+                noValidate
+              >
                 <div>
                   <label
                     htmlFor='name'
@@ -136,7 +189,7 @@ const SignUp = () => {
                 <div className='pt-2'>
                   <button
                     type='submit'
-                    className='flex w-full justify-center rounded-md bg-text-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green transition-colors'
+                    className='flex w-full justify-center rounded-md bg-text-green px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green transition-colors'
                   >
                     Sign up
                   </button>
