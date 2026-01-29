@@ -12,6 +12,8 @@ import Dashboard from './pages/Dashboard';
 import NotFoundPage from './pages/NotFoundPage';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import Transactions from './pages/Transactions';
+import Trends from './pages/Trends';
 
 const App = () => {
   const router = createBrowserRouter(
@@ -21,6 +23,8 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path='/categories' element={<Categories />} />
+          <Route path='/transactions' element={<Transactions />} />
+          <Route path='/trends' element={<Trends />} />
         </Route>
 
         {/* Routes that do not use Navbar */}

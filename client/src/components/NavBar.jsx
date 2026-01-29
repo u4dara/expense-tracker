@@ -47,7 +47,7 @@ const NavBar = () => {
           <div className='flex items-center mr-4 shrink-0'>
             <img src='/src/assets/brand-logo.png' className='w-40' />
           </div>
-          <div className='nav-list absolute bg-white min-h-[16vh] left-0 -top-full w-full flex flex-col gap-6 items-center px-5 md:w-auto md:min-h-fit md:static md:justify-center md:flex-row duration-300'>
+          <div className='nav-list absolute bg-white min-h-[16vh] left-0 -top-full w-full flex flex-col gap-6 items-center px-5 md:w-auto md:min-h-fit md:static md:justify-center lg:gap-12 md:flex-row duration-300'>
             <NavLink to='/' className={linkClass}>
               <BiHomeSmile className='h-5.5 w-auto' />
               Home
