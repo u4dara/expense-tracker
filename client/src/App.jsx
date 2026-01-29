@@ -7,6 +7,7 @@ import {
 
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
+import Categories from './pages/Categories';
 import Dashboard from './pages/Dashboard';
 import NotFoundPage from './pages/NotFoundPage';
 import SignIn from './pages/SignIn';
@@ -19,6 +20,7 @@ const App = () => {
         {/* Routes that use common layout with Navbar */}
         <Route element={<MainLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path='/categories' element={<Categories />} />
         </Route>
 
         {/* Routes that do not use Navbar */}

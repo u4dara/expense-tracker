@@ -14,8 +14,25 @@ const signUp = async (userData) => {
   return response.data.data;
 };
 
+// Sign in existing user
+const signIn = async (userData) => {
+  const response = await axios.post(SIGNIN_API_URL, userData);
+
+  if (response.data)
+    localStorage.setItem('user', JSON.stringify(response.data.data));
+
+  return response.data.data;
+};
+
+// Sign out user
+const signOut = () => {
+  localStorage.removeItem('user');
+};
+
 const authService = {
   signUp,
+  signIn,
+  signOut,
 };
 
 export default authService;

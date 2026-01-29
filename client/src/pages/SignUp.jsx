@@ -6,7 +6,7 @@ import * as z from 'zod';
 
 import Spinner from '../components/Spinner';
 import { reset, signUp } from '../features/auth/authSlice';
-import signUpSchema from '../schemas/userSchema';
+import signUpSchema from '../schemas/signUpSchema';
 
 const SignUp = () => {
   const backgroundImage = '/src/assets/bg-gradient.png';
@@ -55,7 +55,14 @@ const SignUp = () => {
     const result = signUpSchema.safeParse(formData);
 
     if (!result.success) {
-      toast.error(result.error.errors[0].message);
+      const tree = z.treeifyError(result.error);
+
+      const allErrors = [
+        ...(tree.errors || []),
+        ...Object.values(tree.properties || {}).flatMap((p) => p.errors),
+      ];
+
+      if (allErrors.length > 0) toast.error(allErrors[0]);
       return;
     } else {
       const userData = {
@@ -69,25 +76,25 @@ const SignUp = () => {
 
   return isLoading ? (
     <>
-      <div className='flex justify-center items-center h-screen bg-gray-100'>
+      <div className='flex items-center justify-center h-screen bg-gray-100'>
         <Spinner loading={true} />
       </div>
     </>
   ) : (
     <>
       <div
-        className='flex min-h-screen flex-col bg-cover bg-center bg-no-repeat'
+        className='flex flex-col min-h-screen bg-center bg-no-repeat bg-cover'
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Navbar */}
         <nav className='w-full p-4 bg-white/10 backdrop-blur-md'>
           <img src='/src/assets/brand-logo.png' className='w-40'></img>
         </nav>
-        <div className='grow flex items-center justify-center px-6 py-12'>
+        <div className='flex items-center justify-center px-6 py-12 grow'>
           {/* Form Card */}
-          <div className='w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl ring-1 ring-gray-900/5 sm:p-10'>
+          <div className='w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl ring-1 ring-gray-900/5 sm:p-10'>
             <div className='w-full'>
-              <h2 className='text-center text-3xl font-bold tracking-tight text-gray-900'>
+              <h2 className='text-3xl font-bold tracking-tight text-center text-gray-900'>
                 Sign up
               </h2>
               <p className='mt-2 text-center text-gray-600'>
@@ -118,7 +125,7 @@ const SignUp = () => {
                       placeholder='John Doe'
                       onChange={onChange}
                       required
-                      className='block w-full rounded-md bg-white px-3 py-2 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
+                      className='block w-full px-3 py-2 text-gray-900 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
                     />
                   </div>
                 </div>
@@ -139,7 +146,7 @@ const SignUp = () => {
                       onChange={onChange}
                       placeholder='john@gmail.com'
                       required
-                      className='block w-full rounded-md bg-white px-3 py-2 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
+                      className='block w-full px-3 py-2 text-gray-900 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
                     />
                   </div>
                 </div>
@@ -160,7 +167,7 @@ const SignUp = () => {
                       onChange={onChange}
                       placeholder='*******'
                       required
-                      className='block w-full rounded-md bg-white px-3 py-2 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
+                      className='block w-full px-3 py-2 text-gray-900 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
                     />
                   </div>
                 </div>
@@ -181,7 +188,7 @@ const SignUp = () => {
                       onChange={onChange}
                       placeholder='********'
                       required
-                      className='block w-full rounded-md bg-white px-3 py-2 text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
+                      className='block w-full px-3 py-2 text-gray-900 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-text-green sm:text-sm'
                     />
                   </div>
                 </div>
@@ -189,14 +196,14 @@ const SignUp = () => {
                 <div className='pt-2'>
                   <button
                     type='submit'
-                    className='flex w-full justify-center rounded-md bg-text-green px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green transition-colors'
+                    className='flex justify-center w-full px-3 py-2 text-base font-semibold text-white transition-colors rounded-md shadow-sm bg-text-green hover:bg-brand-green focus-visible:outline-2 focus-visible:outline-text-green'
                   >
                     Sign up
                   </button>
                 </div>
               </form>
 
-              <p className='mt-4 text-center text-sm text-gray-500'>
+              <p className='mt-4 text-sm text-center text-gray-500'>
                 Already have an account?{' '}
                 <NavLink
                   to='/auth/sign-in'
