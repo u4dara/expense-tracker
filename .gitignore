@@ -64,5 +64,6 @@ typings/
 .next
 
 
-# Webstrome build files
+# Webstrome / vscode build files
 .idea/
+.vscode/
