@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const SIGNUP_API_URL = 'http://localhost:5500/api/v1/auth/sign-up';
-const SIGNIN_API_URL = 'http://localhost:5500/api/v1/auth/sign-in';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const SIGNUP_API_URL = `${BASE_URL}api/v1/auth/sign-up`;
+const SIGNIN_API_URL = `${BASE_URL}api/v1/auth/sign-in`;
 
 // Sign up new user
 const signUp = async (userData) => {
