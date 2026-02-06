@@ -2,7 +2,7 @@ import { BiLogoFacebook, BiLogoPatreon, BiLogoTiktok } from 'react-icons/bi';
 
 const Footer = () => {
   return (
-    <footer className='absolute bottom-0 left-0 right-0 py-4 border-t border-gray-300'>
+    <footer className=' py-4 border-t border-gray-300 mt-8'>
       <div className='px-2 mx-auto max-w-7xl sm:px-6 lg:px-8'>
         <div className='flex flex-col items-center justify-center gap-4'>
           <div className='flex items-center justify-center gap-8'>

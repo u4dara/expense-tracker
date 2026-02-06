@@ -70,7 +70,7 @@ const NavBar = () => {
                   <div>
                      {user ? (
                         <button
-                           className="flex justify-center items-center gap-1.5 bg-brand-green text-white py-2 px-3.5 rounded-md hover:bg-text-green cursor-pointer"
+                           className="flex justify-center items-center gap-1.5 bg-brand-green text-white py-2 px-3.5 rounded-lg hover:bg-text-green cursor-pointer"
                            onClick={onSignOut}
                         >
                            <FaSignOutAlt />
