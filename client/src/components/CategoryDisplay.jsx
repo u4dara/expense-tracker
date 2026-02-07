@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { getCategories, reset } from '../features/category/categorySlice';
 import CategoryCard from './CategoryCard';
+import NewCategoryCard from './NewCategoryCard';
 
 const CategoryDisplay = () => {
   const { user } = useSelector((state) => state.auth);
@@ -40,14 +41,20 @@ const CategoryDisplay = () => {
           <Spinner />
         </div>
       ) : categories.active?.length > 0 || categories.archived?.length > 0 ? (
-        <div className='grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4'>
           {categories.active.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
+          <NewCategoryCard />
         </div>
       ) : (
-        <div className='flex justify-center items-center'>
-          <p className='text-gray-500'>No categories found.</p>
+        <div className='flex flex-col gap-5'>
+          <div className='flex justify-center items-center'>
+            <p className='text-gray-500'>No categories found.</p>
+          </div>
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+            <NewCategoryCard />
+          </div>
         </div>
       )}
     </div>

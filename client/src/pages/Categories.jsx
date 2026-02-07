@@ -8,7 +8,9 @@ const Categories = () => {
       {/* Title */}
       <div className='flex flex-col gap-2 mt-6'>
         <h2 className='text-2xl font-bold'>Expense Categories</h2>
-        <p>Manage and track your spending groups with customizable tags.</p>
+        <p className='text-gray-500'>
+          Manage and track your spending groups with customizable tags.
+        </p>
       </div>
 
       {/* Search bar & Create Button */}

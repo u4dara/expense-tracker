@@ -8,6 +8,7 @@ import {
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
 import Categories from './pages/Categories';
+import CreateNewCategory from './pages/CreateNewCategory';
 import Dashboard from './pages/Dashboard';
 import NotFoundPage from './pages/NotFoundPage';
 import SignIn from './pages/SignIn';
@@ -23,6 +24,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path='/categories' element={<Categories />} />
+          <Route path='/categories/create' element={<CreateNewCategory />} />
           <Route path='/transactions' element={<Transactions />} />
           <Route path='/trends' element={<Trends />} />
         </Route>
